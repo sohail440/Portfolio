@@ -1,0 +1,97 @@
+name: Portfolio polish
+
+on:
+  push:
+    paths:
+      - '.github/workflows/portfolio-polish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upgrade project visuals and polish UI
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          visuals = [
+              '''<div class="project-art art-medical"><div class="art-top"><span>01 / HEALTHCARE</span><b>LIVE PROJECT ↗</b></div><div class="art-med-main"><div><small>GOHAR MEDICAL COMPLEX</small><strong>Better care.<br>Better experience.</strong><p>Clinical Laboratory · OPD · Emergency</p></div><div class="medical-orb"><i>✚</i></div></div><div class="art-float"><b>24/7</b><span>Emergency Care</span></div><div class="art-lines"><i></i><i></i><i></i></div></div>''',
+              '''<div class="project-art art-business"><div class="art-top"><span>02 / BUSINESS</span><b>RESPONSIVE ↗</b></div><div class="biz-head"><div><small>BUSINESS PLATFORM</small><strong>Build. Scale.<br>Convert.</strong></div><div class="biz-stat"><b>+84%</b><span>growth</span></div></div><div class="biz-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="biz-panels"><span>STRATEGY</span><span>UX / UI</span><span>WEB</span></div></div>''',
+              '''<div class="project-art art-modern"><div class="art-top"><span>03 / WEB EXPERIENCE</span><b>FRONT-END ↗</b></div><div class="modern-center"><div class="modern-copy"><small>DIGITAL EXPERIENCE</small><strong>Designed<br>to stand out.</strong></div><div class="modern-stack"><span></span><span></span><span></span></div></div><div class="modern-pill one">UI / UX</div><div class="modern-pill two">MOTION</div><div class="modern-pill three">01—03</div></div>''',
+              '''<div class="project-art art-responsive"><div class="art-top"><span>04 / RESPONSIVE</span><b>ALL DEVICES ↗</b></div><div class="device-stage"><div class="device desktop"><div class="device-bar"></div><div class="device-body"><i></i><i></i><i></i></div></div><div class="device phone"><div class="device-bar"></div><div class="device-body"><i></i><i></i><i></i></div></div></div><div class="device-label">DESKTOP <span>→</span> TABLET <span>→</span> MOBILE</div></div>''',
+              '''<div class="project-art art-ramsum"><div class="art-top"><span>05 / AUSTRALIA</span><b>RAMSUM ↗</b></div><div class="route"><div class="route-copy"><small>BUSINESS NETWORK</small><strong>Connected<br>for growth.</strong><p>Strategy · Services · Digital</p></div><div class="route-map"><span class="node a"></span><span class="node b"></span><span class="node c"></span><i class="path p1"></i><i class="path p2"></i></div></div><div class="route-badge">AU <b>→</b> GLOBAL</div></div>''',
+              '''<div class="project-art art-amro"><div class="art-top"><span>06 / HEALTHCARE</span><b>AMRO ↗</b></div><div class="amro-layout"><div class="amro-title"><small>AMRO HEALTHCARE</small><strong>Care that<br>feels human.</strong></div><div class="amro-cards"><span><b>01</b> Services</span><span><b>02</b> Specialists</span><span><b>03</b> Contact</span></div></div><div class="pulse"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>''',
+              '''<div class="project-art art-vehicle"><div class="art-top"><span>07 / AUTOMOTIVE</span><b>VEHICLE CHECK ↗</b></div><div class="vehicle-main"><div class="car-outline"><div class="wheel left"></div><div class="wheel right"></div><div class="car-cabin"></div></div><div class="inspection"><small>INSPECTION STATUS</small><strong>READY TO CHECK</strong><span><i></i> Within 12 hours</span></div></div><div class="checks"><span>✓ BODY</span><span>✓ ENGINE</span><span>✓ HISTORY</span><span>✓ REPORT</span></div></div>'''
+          ]
+
+          def replace_blocks(source, marker, replacements):
+              out = []
+              pos = 0
+              idx = 0
+              while True:
+                  start = source.find(marker, pos)
+                  if start < 0 or idx >= len(replacements):
+                      out.append(source[pos:])
+                      break
+                  out.append(source[pos:start])
+                  i = start
+                  depth = 0
+                  token_re = re.compile(r'<div\\b[^>]*>|</div>')
+                  for m in token_re.finditer(source, start):
+                      token = m.group(0)
+                      if token.startswith('<div'):
+                          depth += 1
+                      else:
+                          depth -= 1
+                          if depth == 0:
+                              out.append(replacements[idx])
+                              pos = m.end()
+                              idx += 1
+                              break
+                  else:
+                      out.append(source[start:])
+                      pos = len(source)
+                      break
+              return ''.join(out)
+
+          html = replace_blocks(html, '<div class="project-visual">', visuals)
+
+          css = r'''
+/* ===== INTERVIEW POLISH PASS ===== */
+.brand-logo{width:76px;height:76px}
+.project-visual{height:310px;min-height:310px;position:relative;overflow:hidden;background:#090b10;border:0!important}
+.project-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(7,8,11,.28));pointer-events:none}
+.project-art{position:absolute;inset:0;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:20px;background:#0b0e13;color:#f5f7fb}
+.project-art:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent 85%);opacity:.5}
+.project-art:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;bottom:-120px;background:radial-gradient(circle,rgba(139,92,246,.26),transparent 68%);filter:blur(4px)}
+.art-top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:20px 22px;color:#7e899a;font:9px ui-monospace,monospace;letter-spacing:1.2px}.art-top b{color:#b9a8ff;font-weight:500}.art-med-main,.biz-head,.modern-center,.route,.amro-layout,.vehicle-main{position:relative;z-index:2;padding:20px 24px;display:flex;justify-content:space-between;align-items:end}.art-med-main small,.biz-head small,.modern-copy small,.route-copy small,.amro-title small,.inspection small{display:block;color:#8d98a8;font:8px ui-monospace,monospace;letter-spacing:1.4px;margin-bottom:10px}.art-med-main strong,.biz-head strong,.modern-copy strong,.route-copy strong,.amro-title strong{display:block;font:700 35px/.94 'Space Grotesk';letter-spacing:-1.7px}.art-med-main p,.route-copy p{color:#7c8796;font-size:9px;margin-top:12px}.medical-orb{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(34,211,238,.25);background:radial-gradient(circle,rgba(34,211,238,.2),rgba(139,92,246,.06) 48%,transparent 70%);box-shadow:0 0 55px rgba(34,211,238,.08)}.medical-orb i{font-style:normal;font-size:35px;color:#7ee8f7}.art-float{position:absolute;right:22px;top:105px;z-index:3;padding:12px 14px;border:1px solid #2c3541;border-radius:11px;background:rgba(9,12,17,.88);box-shadow:0 18px 35px rgba(0,0,0,.25)}.art-float b{font:700 18px 'Space Grotesk';display:block}.art-float span{font-size:8px;color:#7d8795}.art-lines{position:absolute;left:24px;right:24px;bottom:22px;display:flex;gap:7px}.art-lines i{height:4px;border-radius:9px;background:linear-gradient(90deg,#8b5cf6,#22d3ee);opacity:.6}.art-lines i:nth-child(1){width:44%}.art-lines i:nth-child(2){width:24%;opacity:.3}.art-lines i:nth-child(3){width:12%;opacity:.18}
+.art-business:after{background:radial-gradient(circle,rgba(34,211,238,.23),transparent 68%)}.biz-stat{padding:10px 13px;border:1px solid #29313d;border-radius:10px;background:rgba(255,255,255,.025)}.biz-stat b{display:block;font:700 21px 'Space Grotesk';color:#8deaf5}.biz-stat span{font-size:8px;color:#7d8795}.biz-chart{position:absolute;left:24px;right:24px;bottom:64px;height:78px;display:flex;align-items:end;gap:7px;z-index:2}.biz-chart i{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#a78bfa,rgba(139,92,246,.08));height:var(--h,50%);opacity:.7}.biz-chart i:nth-child(1){--h:35%}.biz-chart i:nth-child(2){--h:48%}.biz-chart i:nth-child(3){--h:42%}.biz-chart i:nth-child(4){--h:66%}.biz-chart i:nth-child(5){--h:57%}.biz-chart i:nth-child(6){--h:82%}.biz-chart i:nth-child(7){--h:96%}.biz-panels{position:absolute;left:24px;bottom:20px;display:flex;gap:7px;z-index:3}.biz-panels span,.checks span{padding:6px 8px;border:1px solid #29313d;border-radius:6px;background:#0b0e13;color:#7f8997;font-size:7px;letter-spacing:.8px}
+.art-modern:after{background:radial-gradient(circle,rgba(139,92,246,.3),transparent 68%)}.modern-copy{max-width:270px}.modern-stack{position:relative;width:180px;height:145px}.modern-stack span{position:absolute;border:1px solid #303947;border-radius:13px;background:linear-gradient(145deg,#171c26,#0b0e13);box-shadow:0 20px 35px rgba(0,0,0,.25)}.modern-stack span:nth-child(1){inset:8px 0 22px 34px;transform:rotate(8deg)}.modern-stack span:nth-child(2){inset:25px 24px 5px 10px;transform:rotate(-5deg)}.modern-stack span:nth-child(3){inset:0 48px 48px 42px;transform:rotate(2deg);background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(34,211,238,.05))}.modern-pill{position:absolute;z-index:3;padding:7px 10px;border-radius:8px;border:1px solid #313947;background:rgba(10,13,18,.9);font:8px ui-monospace;color:#aeb8c6}.modern-pill.one{left:24px;bottom:26px}.modern-pill.two{right:28px;top:108px}.modern-pill.three{right:34px;bottom:25px;color:#8deaf5}
+.art-responsive:after{background:radial-gradient(circle,rgba(34,211,238,.24),transparent 68%)}.device-stage{position:relative;z-index:2;height:205px;margin:2px 22px 0}.device{position:absolute;border:1px solid #323b48;background:#090c11;border-radius:11px;box-shadow:0 20px 35px rgba(0,0,0,.35);overflow:hidden}.device.desktop{width:270px;height:155px;left:15px;top:15px}.device.phone{width:78px;height:145px;right:52px;top:28px;border-radius:15px;background:#0d1118}.device-bar{height:18px;border-bottom:1px solid #242c37;background:#10151c}.device-body{padding:14px;display:grid;gap:8px}.device-body i{display:block;height:18px;border-radius:5px;background:linear-gradient(90deg,rgba(139,92,246,.45),rgba(34,211,238,.12))}.device-body i:nth-child(2){width:70%}.device-body i:nth-child(3){width:45%}.device-label{position:absolute;bottom:22px;left:24px;z-index:3;color:#768292;font:8px ui-monospace;letter-spacing:1px}.device-label span{color:#8b5cf6;padding:0 8px}
+.art-ramsum:after{background:radial-gradient(circle,rgba(74,222,128,.18),transparent 68%)}.route-copy{min-width:270px}.route-map{position:relative;width:220px;height:150px;border:1px solid #27303b;border-radius:14px;background:radial-gradient(circle at 30% 60%,rgba(34,211,238,.12),transparent 25%),#0b0f14;overflow:hidden}.node{position:absolute;width:9px;height:9px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 16px rgba(139,92,246,.7);z-index:3}.node.a{left:26px;bottom:35px}.node.b{left:96px;top:38px;background:#22d3ee}.node.c{right:27px;bottom:50px;background:#4ade80}.path{position:absolute;height:1px;background:linear-gradient(90deg,#8b5cf6,#22d3ee);transform-origin:left center;z-index:2}.p1{width:86px;left:33px;bottom:40px;transform:rotate(-31deg)}.p2{width:103px;left:103px;top:44px;transform:rotate(35deg)}.route-badge{position:absolute;left:24px;bottom:22px;z-index:3;color:#8994a3;font:8px ui-monospace;letter-spacing:1.3px}.route-badge b{color:#4ade80;padding:0 6px}
+.art-amro:after{background:radial-gradient(circle,rgba(34,211,238,.2),transparent 68%)}.amro-cards{display:grid;gap:7px;width:210px}.amro-cards span{padding:9px 11px;border:1px solid #29323e;border-radius:8px;background:rgba(255,255,255,.025);font-size:8px;color:#7e8997}.amro-cards b{color:#a78bfa;margin-right:10px}.pulse{position:absolute;left:24px;right:24px;bottom:22px;height:24px;display:flex;align-items:end;gap:4px}.pulse i{width:4px;border-radius:4px;background:#22d3ee;height:var(--h,35%);opacity:.55}.pulse i:nth-child(1){--h:35%}.pulse i:nth-child(2){--h:58%}.pulse i:nth-child(3){--h:28%}.pulse i:nth-child(4){--h:90%}.pulse i:nth-child(5){--h:48%}.pulse i:nth-child(6){--h:72%}
+.art-vehicle:after{background:radial-gradient(circle,rgba(17,85,242,.3),transparent 68%)}.vehicle-main{align-items:center;padding-top:26px}.car-outline{position:relative;width:270px;height:100px;border:2px solid rgba(17,85,242,.7);border-radius:48px 70px 20px 20px/38px 42px 20px 20px;background:linear-gradient(145deg,rgba(17,85,242,.16),rgba(255,255,255,.015));box-shadow:0 0 35px rgba(17,85,242,.12)}.car-cabin{position:absolute;left:74px;top:-29px;width:110px;height:48px;border:2px solid rgba(17,85,242,.55);border-bottom:0;border-radius:48px 48px 0 0;transform:skewX(-8deg)}.wheel{position:absolute;bottom:-17px;width:34px;height:34px;border-radius:50%;background:#090b10;border:5px solid #27313e}.wheel.left{left:43px}.wheel.right{right:43px}.inspection{min-width:170px}.inspection strong{display:block;font:700 17px 'Space Grotesk';letter-spacing:-.4px}.inspection span{display:block;margin-top:8px;color:#7e8997;font-size:8px}.inspection span i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px rgba(74,222,128,.6);margin-right:5px}.checks{position:absolute;left:24px;right:24px;bottom:20px;display:flex;gap:7px;z-index:3}.checks span{color:#7e9fe8}
+.project-card{transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease}.project-card:hover{transform:translateY(-8px);border-color:rgba(139,92,246,.45);box-shadow:0 26px 70px rgba(0,0,0,.28)}.project-card:hover .project-art{transform:scale(1.018)}.project-art{transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+@media(max-width:700px){.brand-logo{width:62px;height:62px}.project-visual{height:245px;min-height:245px}.art-med-main,.biz-head,.modern-center,.route,.amro-layout,.vehicle-main{padding:12px 17px}.art-med-main strong,.biz-head strong,.modern-copy strong,.route-copy strong,.amro-title strong{font-size:27px}.medical-orb{width:78px;height:78px}.medical-orb i{font-size:25px}.route-map{width:145px;height:110px}.car-outline{width:185px;height:72px}.device.desktop{width:205px;height:120px}.device.phone{right:20px;width:62px;height:115px}.checks{left:17px;right:17px;gap:4px}.checks span{font-size:6px;padding:5px}.art-top{padding:15px 17px}.biz-chart{left:17px;right:17px}.biz-panels{left:17px}.art-float{right:15px;top:94px}}
+@media(prefers-reduced-motion:reduce){.project-art,.project-card{transition:none}}
+'''
+          html = html.replace('</style>', css + '\n</style>', 1)
+          path.write_text(html, encoding='utf-8')
+      - name: Commit changes
+        run: |
+          git config user.name "portfolio-polish-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Upgrade project cards and portfolio visual polish"
+          git push
