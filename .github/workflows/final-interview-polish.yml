@@ -1,0 +1,86 @@
+name: Final interview polish
+
+on:
+  push:
+    paths:
+      - '.github/workflows/final-interview-polish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply final portfolio polish
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          css = r'''
+/* ===== FINAL INTERVIEW POLISH ===== */
+@media (pointer:coarse){body{cursor:auto}.cursor-dot,.cursor-ring{display:none}}
+:focus-visible{outline:2px solid var(--accent2);outline-offset:4px}
+.nav{min-height:82px}.brand-logo{width:72px;height:72px;max-height:72px}
+.project-card,.project{isolation:isolate}
+.project-visual{height:330px!important;min-height:330px!important;padding:0!important;border-radius:22px 22px 0 0!important;background:#090b10!important;position:relative!important;overflow:hidden!important}
+.project-visual:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 18%,rgba(139,92,246,.16),transparent 32%),radial-gradient(circle at 84% 78%,rgba(34,211,238,.10),transparent 34%),linear-gradient(135deg,#11151d,#080a0e);z-index:0}
+.project-visual:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000 0%,transparent 90%);opacity:.45;pointer-events:none;z-index:1}
+.project-visual .pv{position:absolute;inset:0;padding:22px;z-index:2}
+.pv-head{display:flex;justify-content:space-between;align-items:center;color:#778293;font:9px ui-monospace,monospace;letter-spacing:1.25px}.pv-head b{color:#b8a7ff;font-weight:500}.pv-main{position:absolute;left:24px;right:24px;top:86px;display:flex;justify-content:space-between;align-items:center;gap:20px}.pv-copy small{display:block;color:#8792a1;font:8px ui-monospace,monospace;letter-spacing:1.5px;margin-bottom:10px}.pv-copy strong{display:block;font:700 36px/.94 'Space Grotesk';letter-spacing:-1.8px;max-width:310px}.pv-copy p{font-size:9px;color:#717d8d;margin-top:12px}.pv-chip{display:inline-flex;margin-top:15px;padding:7px 9px;border:1px solid #303846;border-radius:7px;background:rgba(255,255,255,.025);font:8px ui-monospace;color:#9aa5b4}.pv-orb{width:126px;height:126px;border-radius:50%;border:1px solid rgba(139,92,246,.3);background:radial-gradient(circle,rgba(139,92,246,.27),rgba(34,211,238,.06) 42%,transparent 70%);box-shadow:0 0 70px rgba(139,92,246,.12);display:grid;place-items:center;flex:none}.pv-orb:before{content:"";width:54px;height:54px;border:1px solid rgba(34,211,238,.45);border-radius:50%;box-shadow:0 0 28px rgba(34,211,238,.14)}.pv-bottom{position:absolute;left:24px;right:24px;bottom:21px;display:flex;justify-content:space-between;align-items:end}.pv-index{font:700 11px ui-monospace;color:#5f6a7a}.pv-line{height:3px;width:130px;border-radius:20px;background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 0 18px rgba(139,92,246,.25)}
+.pv-business .pv-orb{border-radius:18px;width:150px;height:116px;background:linear-gradient(145deg,rgba(34,211,238,.12),rgba(139,92,246,.06));position:relative}.pv-business .pv-orb:before{width:100px;height:50px;border-radius:8px;border:0;background:repeating-linear-gradient(90deg,rgba(167,139,250,.7) 0 10px,transparent 10px 18px);clip-path:polygon(0 90%,10% 70%,20% 76%,30% 42%,40% 55%,50% 28%,60% 43%,70% 18%,80% 34%,90% 5%,100% 20%,100% 100%,0 100%)}
+.pv-modern .pv-orb{border-radius:18px;width:150px;height:132px;transform:rotate(5deg);background:linear-gradient(145deg,rgba(139,92,246,.2),rgba(34,211,238,.06));}.pv-modern .pv-orb:before{width:80px;height:80px;border-radius:16px;border-color:rgba(255,255,255,.16);transform:rotate(-10deg)}
+.pv-responsive .pv-main{align-items:center}.device-stack{position:relative;width:230px;height:145px;flex:none}.fake-screen{position:absolute;border:1px solid #303947;border-radius:12px;background:#0c1016;box-shadow:0 22px 38px rgba(0,0,0,.35);overflow:hidden}.fake-screen.desktop{width:190px;height:112px;left:0;top:5px}.fake-screen.phone{width:58px;height:106px;right:5px;bottom:0;border-radius:13px}.fake-screen:before{content:"";display:block;height:17px;background:#111720;border-bottom:1px solid #242c37}.fake-screen:after{content:"";display:block;margin:13px;width:65%;height:12px;border-radius:4px;background:linear-gradient(90deg,rgba(139,92,246,.55),rgba(34,211,238,.1));box-shadow:0 22px 0 rgba(255,255,255,.06),0 44px 0 rgba(255,255,255,.035)}
+.pv-ramsum .pv-orb{border-radius:18px;width:150px;height:130px;background:radial-gradient(circle at 25% 65%,#8b5cf6 0 3px,transparent 4px),radial-gradient(circle at 55% 28%,#22d3ee 0 3px,transparent 4px),radial-gradient(circle at 82% 62%,#4ade80 0 3px,transparent 4px),linear-gradient(145deg,#10161d,#0a0d12);position:relative}.pv-ramsum .pv-orb:after{content:"";position:absolute;left:25%;top:46%;width:58%;height:1px;background:linear-gradient(90deg,#8b5cf6,#22d3ee,#4ade80);transform:rotate(-18deg);box-shadow:0 -22px 0 rgba(34,211,238,.15)}
+.pv-amro .pv-orb{border-radius:18px;width:150px;height:130px;background:linear-gradient(145deg,rgba(34,211,238,.14),rgba(139,92,246,.08));position:relative}.pv-amro .pv-orb:before{width:72px;height:72px;border-radius:50%;border:1px solid rgba(34,211,238,.35);box-shadow:0 0 0 13px rgba(34,211,238,.04),0 0 0 26px rgba(139,92,246,.03)}
+.pv-vehicle .pv-orb{border-radius:18px;width:170px;height:118px;background:linear-gradient(145deg,rgba(17,85,242,.18),rgba(139,92,246,.07));position:relative}.pv-vehicle .pv-orb:before{width:110px;height:42px;border-radius:48% 52% 18% 18%;border:2px solid #5e8cff;transform:translateY(7px);box-shadow:-32px 26px 0 -23px #5e8cff,32px 26px 0 -23px #5e8cff}
+.project-card:hover .project-visual,.project:hover .project-visual{transform:scale(1.012)}
+.project-visual{transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .45s ease}.project-card:hover .project-visual,.project:hover .project-visual{filter:saturate(1.12) brightness(1.04)}
+@media(max-width:850px){.project-visual{height:285px!important;min-height:285px!important}.pv-copy strong{font-size:30px}.pv-orb{width:105px;height:105px}.device-stack{transform:scale(.8);transform-origin:right center}}
+@media(max-width:560px){.project-visual{height:255px!important;min-height:255px!important}.project-visual .pv{padding:17px}.pv-main{left:18px;right:18px;top:72px}.pv-copy strong{font-size:25px;max-width:220px}.pv-copy p{font-size:8px}.pv-orb{width:82px;height:82px}.pv-bottom{left:18px;right:18px}.device-stack{width:125px;transform:scale(.62)}.pv-head{font-size:8px}.brand-logo{width:62px;height:62px}}
+'''
+
+          style_tag = '<style id="final-interview-polish">' + css + '</style>'
+          if 'id="final-interview-polish"' not in html:
+              html = html.replace('</head>', style_tag + '</head>', 1)
+
+          script = r'''
+<script id="final-project-visuals">
+(() => {
+  const visuals = [
+    ['pv-medical','01 / HEALTHCARE','LIVE PROJECT ↗','GOHAR MEDICAL COMPLEX','Better care.<br>Better experience.','Clinical Laboratory · OPD · Emergency','24/7 EMERGENCY'],
+    ['pv-business','02 / BUSINESS','RESPONSIVE ↗','BUSINESS WEBSITE','Build. Scale.<br>Convert.','Strategy · UX / UI · Responsive','BUSINESS PLATFORM'],
+    ['pv-modern','03 / WEB EXPERIENCE','FRONT-END ↗','MODERN WEB EXPERIENCE','Designed<br>to stand out.','Interface · Motion · Front-end','DIGITAL EXPERIENCE'],
+    ['pv-responsive','04 / RESPONSIVE','ALL DEVICES ↗','RESPONSIVE WEBSITE','One experience.<br>Every screen.','Desktop · Tablet · Mobile','ALL DEVICES'],
+    ['pv-ramsum','05 / AUSTRALIA','RAMSUM ↗','RAMSUM','Connected<br>for growth.','Business · Services · Digital','AU → GLOBAL'],
+    ['pv-amro','06 / HEALTHCARE','AMRO ↗','AMRO HEALTHCARE','Care that<br>feels human.','Services · Specialists · Contact','HEALTHCARE'],
+    ['pv-vehicle','07 / AUTOMOTIVE','VEHICLE CHECK ↗','VEHICLE INSPECT CHECK','Inspect smarter.<br>Buy with confidence.','WooCommerce · UX · Automotive','WITHIN 12 HOURS']
+  ];
+  const cards = document.querySelectorAll('.project-visual');
+  cards.forEach((el, i) => {
+    const v = visuals[i];
+    if (!v) return;
+    el.innerHTML = `<div class="pv ${v[0]}"><div class="pv-head"><span>${v[1]}</span><b>${v[2]}</b></div><div class="pv-main"><div class="pv-copy"><small>${v[4] ? v[3] : ''}</small><strong>${v[4]}</strong><p>${v[5]}</p><span class="pv-chip">${v[6]}</span></div><div class="pv-orb" aria-hidden="true"></div></div><div class="pv-bottom"><span class="pv-index">0${i+1}</span><span class="pv-line"></span></div></div>`;
+  });
+})();
+</script>
+'''
+          if 'id="final-project-visuals"' not in html:
+              html = html.replace('</body>', script + '</body>', 1)
+
+          path.write_text(html, encoding='utf-8')
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Finalize interview-ready portfolio visuals"
+          git push
