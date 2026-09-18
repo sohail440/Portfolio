@@ -1913,6 +1913,882 @@ footer{
     transition-duration:.01ms!important;
   }
 }
+
+/* =========================================================
+   RESPONSIVE FIXES — MOBILE & TABLET ONLY
+   Desktop styles above remain unchanged.
+========================================================= */
+
+@media (max-width:1000px){
+  /* Prevent fixed/absolute decorative elements from creating
+     horizontal overflow on smaller screens */
+  html,body{
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  .wrap{
+    width:min(calc(100% - 36px),var(--max));
+  }
+
+  header{
+    padding:10px 0;
+  }
+
+  .brand{
+    min-width:0;
+  }
+
+  .brand-logo{
+    width:78px;
+    height:78px;
+    flex:0 0 78px;
+  }
+
+  .brand-name{
+    font-size:14px;
+    min-width:0;
+  }
+
+  .brand-name small{
+    font-size:8px;
+    letter-spacing:1.5px;
+  }
+
+  .hero{
+    min-height:auto;
+    padding-top:125px;
+    padding-bottom:70px;
+    gap:20px;
+  }
+
+  .hero-content{
+    width:100%;
+    min-width:0;
+  }
+
+  .hero h1{
+    font-size:clamp(54px,9vw,82px);
+    letter-spacing:-5px;
+    overflow-wrap:normal;
+  }
+
+  .hero-text{
+    max-width:680px;
+    font-size:17px;
+  }
+
+  .hero-buttons{
+    align-items:stretch;
+  }
+
+  .hero-visual{
+    width:100%;
+    min-height:430px;
+    overflow:visible;
+  }
+
+  .orb{
+    width:min(390px,62vw);
+    max-width:390px;
+  }
+
+  .section-head{
+    margin-bottom:40px;
+  }
+
+  .section-title{
+    font-size:clamp(40px,6.5vw,68px);
+    letter-spacing:-3px;
+  }
+
+  .section-copy{
+    font-size:16px;
+  }
+
+  .about-card{
+    padding:32px;
+  }
+
+  .about-card h3{
+    font-size:28px;
+  }
+
+  .dna-stage{
+    width:100%;
+    min-height:620px;
+    overflow:visible;
+  }
+
+  .why-cards{
+    gap:16px;
+  }
+
+  .glow-card{
+    padding:26px;
+  }
+
+  .services-grid{
+    gap:16px;
+  }
+
+  .service{
+    min-height:235px;
+    padding:26px;
+  }
+
+  .process{
+    margin-top:45px;
+  }
+
+  .impact-box{
+    padding:45px 20px;
+  }
+
+  .skill-box{
+    padding:26px;
+  }
+
+  .terminal{
+    width:100%;
+  }
+
+  .terminal-body{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .project{
+    min-height:330px;
+    padding:30px;
+  }
+
+  .project h3{
+    margin-top:55px;
+    font-size:29px;
+  }
+
+  .project-bottom{
+    left:30px;
+    right:30px;
+  }
+
+  .value-card{
+    min-height:220px;
+    padding:25px;
+  }
+
+  .universe{
+    min-height:620px;
+  }
+
+  .universe h2{
+    font-size:clamp(55px,10vw,100px);
+  }
+
+  .universe-orbit:nth-child(3){
+    width:850px;
+    height:850px;
+  }
+
+  .cta{
+    min-height:450px;
+    border-radius:28px;
+    padding:60px 25px;
+  }
+
+  .cta:before{
+    width:440px;
+    height:440px;
+  }
+
+  .cta:after{
+    width:620px;
+    height:620px;
+  }
+
+  .contact-info,
+  .contact-form{
+    padding:30px;
+  }
+
+  .footer-inner{
+    align-items:flex-start;
+  }
+}
+
+@media (max-width:650px){
+  section{
+    padding:72px 0;
+  }
+
+  .wrap{
+    width:calc(100% - 28px);
+  }
+
+  header{
+    padding:7px 0;
+  }
+
+  .brand{
+    gap:8px;
+  }
+
+  .brand-logo{
+    width:58px;
+    height:58px;
+    flex:0 0 58px;
+  }
+
+  .brand-name{
+    font-size:13px;
+    line-height:1.25;
+  }
+
+  .brand-name small{
+    margin-top:2px;
+    font-size:7px;
+    letter-spacing:1px;
+  }
+
+  .hero{
+    padding-top:100px;
+    padding-bottom:45px;
+    gap:10px;
+  }
+
+  .hero-tag{
+    font-size:10px;
+    padding:7px 11px;
+    margin-bottom:20px;
+  }
+
+  .hero h1{
+    font-size:clamp(45px,14vw,60px);
+    line-height:.94;
+    letter-spacing:-3.5px;
+  }
+
+  .hero-text{
+    font-size:15px;
+    line-height:1.7;
+    margin:22px 0;
+  }
+
+  .hero-buttons{
+    width:100%;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .hero-buttons .btn{
+    width:100%;
+    min-height:50px;
+    padding:13px 18px;
+  }
+
+  .hero-visual{
+    min-height:320px;
+    margin-top:5px;
+  }
+
+  .orb{
+    width:250px;
+    max-width:250px;
+  }
+
+  .orb:before{
+    inset:-22px;
+  }
+
+  .orb:after{
+    inset:-40px;
+  }
+
+  .orb-core strong{
+    font-size:42px;
+    letter-spacing:-3px;
+  }
+
+  .orb-core span{
+    font-size:9px;
+    letter-spacing:1.5px;
+  }
+
+  .orb-core small{
+    font-size:9px;
+  }
+
+  .section-head{
+    margin-bottom:32px;
+  }
+
+  .eyebrow{
+    font-size:10px;
+    letter-spacing:2px;
+    margin-bottom:10px;
+  }
+
+  .section-title{
+    font-size:clamp(36px,12vw,52px);
+    letter-spacing:-2.5px;
+  }
+
+  .section-copy{
+    font-size:14px;
+    line-height:1.7;
+  }
+
+  .about-card{
+    padding:24px;
+    border-radius:20px;
+  }
+
+  .about-card h3{
+    font-size:24px;
+  }
+
+  .about-card p{
+    font-size:14px;
+  }
+
+  .stats{
+    gap:10px;
+    margin-top:22px;
+  }
+
+  .stat{
+    padding:20px;
+  }
+
+  .stat strong{
+    font-size:34px;
+  }
+
+  .stat span{
+    font-size:12px;
+  }
+
+  .approach-steps{
+    margin:22px 0 20px;
+    gap:10px;
+  }
+
+  .approach-step{
+    padding:13px;
+  }
+
+  .approach-footer{
+    gap:14px;
+  }
+
+  .approach-footer-note{
+    font-size:11px;
+  }
+
+  /* DNA / orbital graphic */
+  .dna-stage{
+    min-height:410px;
+    transform:none;
+    margin:5px 0 -15px;
+    overflow:hidden;
+  }
+
+  .dna-core{
+    width:105px;
+    height:105px;
+  }
+
+  .dna-core strong{
+    font-size:18px;
+  }
+
+  .orbit-1{
+    width:210px;
+    height:210px;
+  }
+
+  .orbit-2{
+    width:315px;
+    height:315px;
+  }
+
+  .orbit-3{
+    width:410px;
+    height:410px;
+  }
+
+  .tech-node{
+    padding:7px 9px;
+    font-size:9px;
+  }
+
+  .n1{top:11%;left:43%}
+  .n2{top:29%;right:1%}
+  .n3{bottom:20%;right:3%}
+  .n4{bottom:7%;left:39%}
+  .n5{bottom:22%;left:0}
+  .n6{top:28%;left:0}
+
+  .giant-line{
+    font-size:clamp(46px,15vw,65px);
+    letter-spacing:-3px;
+    white-space:nowrap;
+  }
+
+  .why-cards{
+    margin-top:45px;
+    gap:12px;
+  }
+
+  .glow-card{
+    padding:22px;
+    border-radius:18px;
+  }
+
+  .glow-card h3{
+    font-size:22px;
+    margin:18px 0 8px;
+  }
+
+  .glow-card p{
+    font-size:13px;
+    line-height:1.7;
+  }
+
+  .services-grid{
+    gap:12px;
+  }
+
+  .service{
+    min-height:0;
+    padding:22px;
+    border-radius:18px;
+  }
+
+  .service-icon{
+    width:48px;
+    height:48px;
+    font-size:21px;
+    margin-bottom:18px;
+  }
+
+  .service h3{
+    font-size:20px;
+  }
+
+  .service p{
+    font-size:13px;
+    line-height:1.7;
+  }
+
+  .process{
+    margin-top:35px;
+  }
+
+  .process-grid{
+    gap:32px;
+  }
+
+  .step-node{
+    width:70px;
+    height:70px;
+    font-size:20px;
+  }
+
+  .step h3{
+    font-size:20px;
+    margin:18px 0 7px;
+  }
+
+  .step p{
+    font-size:12px;
+    line-height:1.7;
+  }
+
+  .impact-grid{
+    border-radius:20px;
+  }
+
+  .impact-box{
+    padding:34px 15px;
+  }
+
+  .impact-number{
+    font-size:48px;
+  }
+
+  .impact-box span{
+    font-size:12px;
+  }
+
+  .skills-grid{
+    gap:12px;
+  }
+
+  .skill-box{
+    padding:21px;
+    border-radius:17px;
+  }
+
+  .skill-top strong{
+    font-size:13px;
+  }
+
+  .skill-top span{
+    font-size:12px;
+  }
+
+  .terminal{
+    border-radius:16px;
+  }
+
+  .terminal-head{
+    height:42px;
+    padding:0 13px;
+  }
+
+  .terminal-body{
+    padding:18px;
+    min-height:300px;
+    font-size:10px;
+    line-height:1.75;
+    white-space:pre;
+  }
+
+  .projects-grid{
+    gap:12px;
+  }
+
+  .project{
+    min-height:290px;
+    padding:23px;
+    border-radius:20px;
+  }
+
+  .project h3{
+    margin:48px 0 8px;
+    font-size:25px;
+  }
+
+  .project p{
+    font-size:13px;
+    line-height:1.7;
+  }
+
+  .project-bottom{
+    left:23px;
+    right:23px;
+    bottom:22px;
+  }
+
+  .project-arrow{
+    width:40px;
+    height:40px;
+  }
+
+  .value-grid{
+    gap:12px;
+  }
+
+  .value-card{
+    min-height:190px;
+    padding:22px;
+    border-radius:18px;
+  }
+
+  .value-icon{
+    font-size:30px;
+    margin-bottom:30px;
+  }
+
+  .value-card h3{
+    font-size:20px;
+  }
+
+  .value-card p{
+    font-size:12px;
+    line-height:1.7;
+  }
+
+  /* Keep the universe visually centered without giant mobile overflow */
+  .universe{
+    min-height:500px;
+  }
+
+  .universe h2{
+    font-size:clamp(48px,15vw,68px);
+    letter-spacing:-4px;
+    line-height:.86;
+  }
+
+  .universe-core{
+    width:190px;
+    height:190px;
+  }
+
+  .universe-orbit{
+    width:300px;
+    height:300px;
+  }
+
+  .universe-orbit:nth-child(2){
+    width:450px;
+    height:450px;
+  }
+
+  .universe-orbit:nth-child(3){
+    width:600px;
+    height:600px;
+  }
+
+  .cta-section{
+    padding-bottom:35px;
+  }
+
+  .cta{
+    min-height:400px;
+    padding:50px 18px;
+    border-radius:22px;
+  }
+
+  .cta h2{
+    font-size:clamp(40px,12vw,58px);
+    letter-spacing:-3px;
+  }
+
+  .cta p{
+    font-size:13px;
+    line-height:1.7;
+    margin:20px auto 25px;
+  }
+
+  .cta .btn{
+    width:100%;
+  }
+
+  .cta:before{
+    width:330px;
+    height:330px;
+  }
+
+  .cta:after{
+    width:470px;
+    height:470px;
+  }
+
+  .contact-grid{
+    gap:12px;
+  }
+
+  .contact-info,
+  .contact-form{
+    padding:22px;
+    border-radius:19px;
+  }
+
+  .contact-info h3,
+  .contact-form h3{
+    font-size:23px;
+  }
+
+  .contact-info p{
+    font-size:13px;
+    line-height:1.75;
+  }
+
+  .contact-details{
+    margin-top:20px;
+    gap:9px;
+  }
+
+  .contact-detail{
+    padding:12px;
+    gap:10px;
+  }
+
+  .contact-detail-icon{
+    width:38px;
+    height:38px;
+    flex-basis:38px;
+    font-size:16px;
+  }
+
+  .contact-detail strong{
+    font-size:12px;
+  }
+
+  .contact-detail span{
+    font-size:10px;
+    overflow-wrap:anywhere;
+  }
+
+  .contact-email{
+    font-size:12px;
+    overflow-wrap:anywhere;
+  }
+
+  .form-grid{
+    gap:0;
+  }
+
+  .field input,
+  .field textarea{
+    padding:12px;
+    font-size:13px;
+  }
+
+  .field textarea{
+    min-height:120px;
+  }
+
+  .form-submit{
+    width:100%;
+  }
+
+  footer{
+    padding:22px 0;
+  }
+
+  .footer-inner{
+    gap:8px;
+    font-size:11px;
+  }
+}
+
+@media (max-width:380px){
+  .wrap{
+    width:calc(100% - 22px);
+  }
+
+  .brand-logo{
+    width:52px;
+    height:52px;
+    flex-basis:52px;
+  }
+
+  .hero h1{
+    font-size:43px;
+    letter-spacing:-3px;
+  }
+
+  .hero-text{
+    font-size:14px;
+  }
+
+  .orb{
+    width:225px;
+    max-width:225px;
+  }
+
+  .dna-stage{
+    min-height:375px;
+  }
+
+  .orbit-1{
+    width:190px;
+    height:190px;
+  }
+
+  .orbit-2{
+    width:285px;
+    height:285px;
+  }
+
+  .orbit-3{
+    width:370px;
+    height:370px;
+  }
+
+  .tech-node{
+    font-size:8px;
+    padding:6px 8px;
+  }
+
+  .universe h2{
+    font-size:45px;
+  }
+}
+
+
+/* RETURN TO TOP — SCROLL PROGRESS RING */
+#returnTop{
+  --progress:0deg;
+  position:fixed;
+  right:28px;
+  bottom:28px;
+  width:54px;
+  height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at center, rgba(10,10,12,.92) 0 68%, transparent 69%),
+    conic-gradient(from -90deg, var(--accent) 0deg var(--progress), rgba(255,255,255,.10) var(--progress) 360deg);
+  color:var(--accent);
+  box-shadow:0 12px 35px rgba(0,0,0,.32), inset 0 0 20px rgba(255,255,255,.025);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  cursor:pointer;
+  z-index:9998;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(14px) scale(.92);
+  transition:opacity .35s ease, visibility .35s ease, transform .35s ease,
+             color .3s ease, filter .3s ease;
+}
+#returnTop.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0) scale(1);
+}
+#returnTop:hover{
+  color:#fff;
+  transform:translateY(-4px) scale(1.03);
+  filter:brightness(1.12);
+  box-shadow:0 16px 40px rgba(0,0,0,.42), 0 0 24px rgba(255,255,255,.05);
+}
+#returnTop svg{
+  position:relative;
+  z-index:2;
+  width:19px;
+  height:19px;
+  stroke:currentColor;
+  stroke-width:1.8;
+  fill:none;
+  transition:transform .3s ease;
+}
+#returnTop:hover svg{
+  transform:translateY(-3px);
+}
+#returnTop::after{
+  content:"";
+  position:absolute;
+  inset:5px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:50%;
+  pointer-events:none;
+}
+@media(max-width:650px){
+  #returnTop{
+    right:16px;
+    bottom:18px;
+    width:48px;
+    height:48px;
+  }
+  #returnTop svg{width:17px;height:17px;}
+}
+@media(max-width:380px){
+  #returnTop{
+    right:13px;
+    bottom:14px;
+    width:44px;
+    height:44px;
+  }
+}
+
 </style>
 </head>
 
@@ -3522,6 +4398,46 @@ document.querySelectorAll('a[href^="#"]')
 
 });
 
+</script>
+
+
+<!-- RETURN TO TOP -->
+<button id="returnTop" type="button" aria-label="Return to top" title="Return to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 19V5"></path>
+    <path d="M6.5 11.5 12 5l5.5 6.5"></path>
+  </svg>
+</button>
+
+
+<script>
+/* Return to top + scroll progress */
+(function(){
+  const btn = document.getElementById('returnTop');
+  if(!btn) return;
+
+  const updateScroll = () => {
+    const doc = document.documentElement;
+    const maxScroll = doc.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0
+      ? Math.min(100, Math.max(0, (window.scrollY / maxScroll) * 100))
+      : 0;
+
+    btn.style.setProperty('--progress', (progress * 3.6) + 'deg');
+    btn.classList.toggle('is-visible', window.scrollY > 500);
+  };
+
+  window.addEventListener('scroll', updateScroll, {passive:true});
+  window.addEventListener('resize', updateScroll);
+  updateScroll();
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+})();
 </script>
 
 </body>
