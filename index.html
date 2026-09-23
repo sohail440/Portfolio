@@ -1,13 +1,38 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png">
   <meta name="google-site-verification" content="fXHz8IOg-mwt0Ium9Y7PGccLbisdNOOKUO4MoVTxp8w" />
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Sohail Ahmed — Senior Web Developer. WordPress, Elementor, WooCommerce, responsive websites and custom web experiences.">
 <meta name="theme-color" content="#07080b">
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" href="favicon.png" type="image/png" sizes="48x48">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sohail Ahmed — Senior Web Developer">
+<meta property="og:description" content="Sohail Ahmed — Senior Web Developer. WordPress, Elementor, WooCommerce, responsive websites and custom web experiences.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sohail Ahmed — Senior Web Developer">
+<meta name="twitter:description" content="WordPress, Elementor, WooCommerce, responsive websites and custom web experiences.">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"Sohail Ahmed",
+  "alternateName":"Sohail Ahmed — Senior Web Developer",
+  "url":"/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Person",
+  "name":"Sohail Ahmed",
+  "jobTitle":"Senior Web Developer",
+  "url":"/",
+  "image":"logo-sp.png"
+}
+</script>
 
   <title>Sohail Ahmed — Senior Web Developer</title>
 
@@ -2946,6 +2971,72 @@ footer{
   }
 }
 
+
+/* =====================================================
+   PERFORMANCE / LOW-END DEVICE FALLBACKS
+   Keeps the visual design but removes expensive effects
+   when the device cannot handle them smoothly.
+===================================================== */
+img{
+  content-visibility:auto;
+}
+
+@media (pointer:coarse), (hover:none){
+  body{cursor:auto;}
+  .cursor-dot,.cursor-ring,#mouseGlow{display:none!important;}
+  .magnetic,.project,.service,.glow-card,.value-card,.about-card{
+    transform:none!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important;}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+
+@media (max-width:900px){
+  .mouse-glow,#mouseGlow{display:none!important;}
+}
+
+@media (max-width:700px){
+  .preloader-logo-wrap:before,.preloader-logo-wrap:after{
+    animation:none!important;
+  }
+}
+
+html.perf-lite .mouse-glow,
+html.perf-lite .cursor-dot,
+html.perf-lite .cursor-ring{display:none!important;}
+
+html.perf-lite .orbit-1,
+html.perf-lite .orbit-2,
+html.perf-lite .orbit-3,
+html.perf-lite .universe-orbit,
+html.perf-lite .particle{
+  animation:none!important;
+}
+
+html.perf-lite .mouse-glow{display:none!important;}
+
+html.perf-lite header,
+html.perf-lite .nav,
+html.perf-lite .mobile-nav{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+
+@media (max-width:900px), (prefers-reduced-motion:reduce){
+  [style*="backdrop-filter"],
+  .glass,.nav,.header,.card{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}
 </style>
 </head>
 
@@ -4033,6 +4124,18 @@ footer{
 <script>
 
 /* =====================================================
+   DEVICE PERFORMANCE MODE
+===================================================== */
+(function(){
+  const cores = navigator.hardwareConcurrency || 8;
+  const memory = navigator.deviceMemory || 8;
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  if(cores <= 4 || memory <= 4 || saveData){
+    document.documentElement.classList.add("perf-lite");
+  }
+})();
+
+/* =====================================================
    PRELOADER
 ===================================================== */
 (function(){
@@ -4040,25 +4143,37 @@ footer{
   const bar = document.getElementById("preloader-bar");
   const percent = document.getElementById("preloader-percent");
   let progress = 0;
+  const started = performance.now();
+  const maxWait = 1400;
 
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
 
-  const timer = setInterval(()=>{
-    progress += progress < 70 ? 3 : progress < 90 ? 2 : 1;
-    if(progress > 100) progress = 100;
+  function finish(){
+    progress = 100;
+    bar.style.width = "100%";
+    percent.textContent = "100%";
+    loader.classList.add("preloader-hide");
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+  }
+
+  function tick(){
+    const elapsed = performance.now() - started;
+    const ready = document.readyState === "complete";
+    progress = Math.min(96, Math.round((elapsed / maxWait) * 96));
     bar.style.width = progress + "%";
     percent.textContent = progress + "%";
-
-    if(progress >= 100){
-      clearInterval(timer);
-      setTimeout(()=>{
-        loader.classList.add("preloader-hide");
-        document.documentElement.style.overflow = "";
-        document.body.style.overflow = "";
-      },350);
+    if(ready || elapsed >= maxWait){
+      finish();
+      return;
     }
-  },45);
+    requestAnimationFrame(tick);
+  }
+
+  if(document.readyState === "complete") finish();
+  else window.addEventListener("load",finish,{once:true});
+  requestAnimationFrame(tick);
 })();
 
 /* =====================================================
@@ -4137,72 +4252,61 @@ function updateProgress(){
 
 }
 
-window.addEventListener("scroll",updateProgress);
+window.addEventListener("scroll",updateProgress,{passive:true});
 
 
 /* =====================================================
-   CUSTOM CURSOR
+   CUSTOM CURSOR — desktop only, transform based
 ===================================================== */
+const finePointer = window.matchMedia("(hover:hover) and (pointer:fine)");
 
-const dot = document.querySelector(".cursor-dot");
-const ring = document.querySelector(".cursor-ring");
+if(finePointer.matches && !document.documentElement.classList.contains("perf-lite")){
+  const dot = document.querySelector(".cursor-dot");
+  const ring = document.querySelector(".cursor-ring");
+  let mouseX = innerWidth / 2, mouseY = innerHeight / 2;
+  let ringX = mouseX, ringY = mouseY;
+  let cursorFrame = 0;
 
-let mouseX = 0;
-let mouseY = 0;
-let ringX = 0;
-let ringY = 0;
+  const updateCursor = e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if(dot) dot.style.transform = `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
+    if(!cursorFrame){
+      cursorFrame = requestAnimationFrame(()=>{
+        ringX += (mouseX-ringX)*.16;
+        ringY += (mouseY-ringY)*.16;
+        if(ring) ring.style.transform = `translate3d(${ringX}px,${ringY}px,0) translate(-50%,-50%)`;
+        cursorFrame = 0;
+      });
+    }
+  };
 
-window.addEventListener("mousemove",e=>{
+  window.addEventListener("pointermove",updateCursor,{passive:true});
 
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-
-  dot.style.left = mouseX + "px";
-  dot.style.top = mouseY + "px";
-
-});
-
-function cursorLoop(){
-
-  ringX += (mouseX - ringX) * .16;
-  ringY += (mouseY - ringY) * .16;
-
-  ring.style.left = ringX + "px";
-  ring.style.top = ringY + "px";
-
-  requestAnimationFrame(cursorLoop);
-
+  document.querySelectorAll("a,button,.service,.project,.glow-card,.value-card,.step-node")
+    .forEach(el=>{
+      el.addEventListener("mouseenter",()=>document.body.classList.add("cursor-hover"));
+      el.addEventListener("mouseleave",()=>document.body.classList.remove("cursor-hover"));
+    });
 }
 
-cursorLoop();
-
-
-document.querySelectorAll("a,button,.service,.project,.glow-card,.value-card,.step-node")
-.forEach(el=>{
-
-  el.addEventListener("mouseenter",()=>{
-    document.body.classList.add("cursor-hover");
-  });
-
-  el.addEventListener("mouseleave",()=>{
-    document.body.classList.remove("cursor-hover");
-  });
-
-});
-
 
 /* =====================================================
-   MOUSE GLOW
+   MOUSE GLOW — desktop only
 ===================================================== */
-
-const glow = document.getElementById("mouseGlow");
-
-window.addEventListener("mousemove",e=>{
-
-  glow.style.left = e.clientX + "px";
-  glow.style.top = e.clientY + "px";
-
-});
+if(finePointer.matches && !document.documentElement.classList.contains("perf-lite")){
+  const glow = document.getElementById("mouseGlow");
+  let glowFrame = 0;
+  let gx = 0, gy = 0;
+  window.addEventListener("pointermove",e=>{
+    gx = e.clientX; gy = e.clientY;
+    if(glowFrame) return;
+    glowFrame = requestAnimationFrame(()=>{
+      if(glow) glow.style.transform = `translate3d(${gx}px,${gy}px,0) translate(-50%,-50%)`;
+      glowFrame = 0;
+    });
+  },{passive:true});
+}
 
 
 /* =====================================================
@@ -4211,20 +4315,19 @@ window.addEventListener("mousemove",e=>{
 
 const heroOrb = document.getElementById("heroOrb");
 
-window.addEventListener("mousemove",e=>{
-
-  if(window.innerWidth < 900) return;
-
-  const x =
-    (e.clientX / window.innerWidth - .5) * 25;
-
-  const y =
-    (e.clientY / window.innerHeight - .5) * 25;
-
-  heroOrb.style.marginLeft = x + "px";
-  heroOrb.style.marginTop = y + "px";
-
-});
+if(finePointer.matches && !document.documentElement.classList.contains("perf-lite")){
+  let heroFrame = 0, hx = 0, hy = 0;
+  window.addEventListener("pointermove",e=>{
+    if(innerWidth < 900) return;
+    hx = (e.clientX / innerWidth - .5) * 25;
+    hy = (e.clientY / innerHeight - .5) * 25;
+    if(heroFrame) return;
+    heroFrame = requestAnimationFrame(()=>{
+      if(heroOrb) heroOrb.style.transform = `translate3d(${hx}px,${hy}px,0)`;
+      heroFrame = 0;
+    });
+  },{passive:true});
+}
 
 
 /* =====================================================
@@ -4351,7 +4454,7 @@ document.querySelectorAll(".magnetic")
 
   el.addEventListener("mousemove",e=>{
 
-    if(window.innerWidth < 900) return;
+    if(window.innerWidth < 900 || !finePointer.matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const rect = el.getBoundingClientRect();
 
@@ -4386,12 +4489,12 @@ document.querySelectorAll(".magnetic")
 const giantLines =
   document.querySelectorAll(".giant-line");
 
+let giantFrame = 0;
 window.addEventListener("scroll",()=>{
-
-  const scroll =
-    window.scrollY;
-
-  giantLines.forEach((line,index)=>{
+  if(giantFrame) return;
+  giantFrame = requestAnimationFrame(()=>{
+    giantFrame = 0;
+    giantLines.forEach((line,index)=>{
 
     const rect =
       line.getBoundingClientRect();
@@ -4420,8 +4523,8 @@ window.addEventListener("scroll",()=>{
 
     }
 
+    });
   });
-
 });
 
 
@@ -4436,7 +4539,7 @@ document.querySelectorAll(
 
   card.addEventListener("mousemove",e=>{
 
-    if(window.innerWidth < 900) return;
+    if(window.innerWidth < 900 || !finePointer.matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const rect =
       card.getBoundingClientRect();
@@ -4603,7 +4706,7 @@ document.querySelectorAll('a[href^="#"]')
       e.preventDefault();
 
       target.scrollIntoView({
-        behavior:"smooth",
+        behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
         block:"start"
       });
 
