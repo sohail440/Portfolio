@@ -185,7 +185,6 @@ body{
   font-family:Inter,system-ui,sans-serif;
   line-height:1.6;
   overflow-x:hidden;
-  cursor:none;
 }
 
 body:before{
@@ -3009,9 +3008,7 @@ img{
   }
 }
 
-html.perf-lite .mouse-glow,
-html.perf-lite .cursor-dot,
-html.perf-lite .cursor-ring{display:none!important;}
+html.perf-lite .mouse-glow{display:none!important;}
 
 html.perf-lite .orbit-1,
 html.perf-lite .orbit-2,
@@ -4139,8 +4136,13 @@ html.perf-lite .mobile-nav{
 (function(){
   const cores = navigator.hardwareConcurrency || 8;
   const memory = navigator.deviceMemory || 8;
-  const saveData = !!(navigator.connection && navigator.connection.saveData);
-  if(cores <= 4 || memory <= 4 || saveData){
+  const connection = navigator.connection;
+  const saveData = !!(connection && connection.saveData);
+  const slowConnection = !!(connection && /2g|slow-2g/.test(connection.effectiveType || ""));
+
+  // Lite mode only on genuinely constrained devices/connections.
+  // All portfolio sections and animations remain intact.
+  if(cores <= 2 || memory <= 2 || saveData || slowConnection){
     document.documentElement.classList.add("perf-lite");
   }
 })();
@@ -4154,7 +4156,7 @@ html.perf-lite .mobile-nav{
   const percent = document.getElementById("preloader-percent");
   let progress = 0;
   const started = performance.now();
-  const maxWait = 1400;
+  const minDisplayTime = 2000;
 
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
@@ -4170,19 +4172,18 @@ html.perf-lite .mobile-nav{
 
   function tick(){
     const elapsed = performance.now() - started;
-    const ready = document.readyState === "complete";
-    progress = Math.min(96, Math.round((elapsed / maxWait) * 96));
+    // Keep the preloader visible for ~2 seconds.
+    progress = Math.min(96, Math.round((elapsed / minDisplayTime) * 96));
     bar.style.width = progress + "%";
     percent.textContent = progress + "%";
-    if(ready || elapsed >= maxWait){
+
+    if(elapsed >= minDisplayTime){
       finish();
       return;
     }
     requestAnimationFrame(tick);
   }
 
-  if(document.readyState === "complete") finish();
-  else window.addEventListener("load",finish,{once:true});
   requestAnimationFrame(tick);
 })();
 
@@ -4270,22 +4271,33 @@ window.addEventListener("scroll",updateProgress,{passive:true});
 ===================================================== */
 const finePointer = window.matchMedia("(hover:hover) and (pointer:fine)");
 
-if(finePointer.matches && !document.documentElement.classList.contains("perf-lite")){
+if(finePointer.matches){
   const dot = document.querySelector(".cursor-dot");
   const ring = document.querySelector(".cursor-ring");
-  let mouseX = innerWidth / 2, mouseY = innerHeight / 2;
-  let ringX = mouseX, ringY = mouseY;
+  let mouseX = innerWidth / 2;
+  let mouseY = innerHeight / 2;
+  let ringX = mouseX;
+  let ringY = mouseY;
   let cursorFrame = 0;
 
   const updateCursor = e => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-    if(dot) dot.style.transform = `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
+
+    if(dot){
+      dot.style.transform =
+        `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
+    }
+
     if(!cursorFrame){
       cursorFrame = requestAnimationFrame(()=>{
-        ringX += (mouseX-ringX)*.16;
-        ringY += (mouseY-ringY)*.16;
-        if(ring) ring.style.transform = `translate3d(${ringX}px,${ringY}px,0) translate(-50%,-50%)`;
+        ringX += (mouseX - ringX) * .16;
+        ringY += (mouseY - ringY) * .16;
+
+        if(ring){
+          ring.style.transform =
+            `translate3d(${ringX}px,${ringY}px,0) translate(-50%,-50%)`;
+        }
         cursorFrame = 0;
       });
     }
@@ -4293,32 +4305,17 @@ if(finePointer.matches && !document.documentElement.classList.contains("perf-lit
 
   window.addEventListener("pointermove",updateCursor,{passive:true});
 
-  document.querySelectorAll("a,button,.service,.project,.glow-card,.value-card,.step-node")
-    .forEach(el=>{
-      el.addEventListener("mouseenter",()=>document.body.classList.add("cursor-hover"));
-      el.addEventListener("mouseleave",()=>document.body.classList.remove("cursor-hover"));
-    });
+  document.querySelectorAll(
+    "a,button,.service,.project,.glow-card,.value-card,.step-node"
+  ).forEach(el=>{
+    el.addEventListener("mouseenter",()=>document.body.classList.add("cursor-hover"));
+    el.addEventListener("mouseleave",()=>document.body.classList.remove("cursor-hover"));
+  });
 }
-
 
 /* =====================================================
    MOUSE GLOW — desktop only
 ===================================================== */
-if(finePointer.matches && !document.documentElement.classList.contains("perf-lite")){
-  const glow = document.getElementById("mouseGlow");
-  let glowFrame = 0;
-  let gx = 0, gy = 0;
-  window.addEventListener("pointermove",e=>{
-    gx = e.clientX; gy = e.clientY;
-    if(glowFrame) return;
-    glowFrame = requestAnimationFrame(()=>{
-      if(glow) glow.style.transform = `translate3d(${gx}px,${gy}px,0) translate(-50%,-50%)`;
-      glowFrame = 0;
-    });
-  },{passive:true});
-}
-
-
 /* =====================================================
    HERO PARALLAX
 ===================================================== */
