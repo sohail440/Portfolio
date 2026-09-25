@@ -312,24 +312,6 @@ body.cursor-hover .cursor-ring{
   box-shadow:0 0 20px var(--accent);
 }
 
-/* MOUSE GLOW */
-.mouse-glow{
-  position:fixed;
-  width:450px;
-  height:450px;
-  border-radius:50%;
-  pointer-events:none;
-  z-index:-1;
-  background:radial-gradient(
-    circle,
-    rgba(139,92,246,.13),
-    rgba(34,211,238,.04) 35%,
-    transparent 70%
-  );
-  transform:translate(-50%,-50%);
-  transition:left .12s ease-out,top .12s ease-out;
-}
-
 /* HEADER */
 header{
   position:fixed;
@@ -485,7 +467,7 @@ header{
 
 @media(max-width:850px){
   body{cursor:auto}
-  .cursor-dot,.cursor-ring,.mouse-glow{display:none}
+  .cursor-dot,.cursor-ring{display:none}
 
   header{padding:8px 0}
 
@@ -2982,7 +2964,7 @@ img{
 
 @media (pointer:coarse), (hover:none){
   body{cursor:auto;}
-  .cursor-dot,.cursor-ring,#mouseGlow{display:none!important;}
+  .cursor-dot,.cursor-ring{display:none!important;}
   .magnetic,.project,.service,.glow-card,.value-card,.about-card{
     transform:none!important;
   }
@@ -2999,7 +2981,6 @@ img{
 }
 
 @media (max-width:900px){
-  .mouse-glow,#mouseGlow{display:none!important;}
 }
 
 @media (max-width:700px){
@@ -3007,8 +2988,6 @@ img{
     animation:none!important;
   }
 }
-
-html.perf-lite .mouse-glow{display:none!important;}
 
 html.perf-lite .orbit-1,
 html.perf-lite .orbit-2,
@@ -3018,8 +2997,6 @@ html.perf-lite .particle{
   animation:none!important;
 }
 
-html.perf-lite .mouse-glow{display:none!important;}
-
 html.perf-lite header,
 html.perf-lite .nav,
 html.perf-lite .mobile-nav{
@@ -3027,12 +3004,42 @@ html.perf-lite .mobile-nav{
   backdrop-filter:none!important;
 }
 
+/* Extra low-device safeguards: keep layout/design intact, disable only costly pointer effects. */
+html.perf-lite .cursor-dot,
+html.perf-lite .cursor-ring{display:none!important;}
+html.perf-lite .hero-orb,
+html.perf-lite .heroOrb{transform:none!important;}
+
 @media (max-width:900px), (prefers-reduced-motion:reduce){
   [style*="backdrop-filter"],
   .glass,.nav,.header,.card{
     -webkit-backdrop-filter:none!important;
     backdrop-filter:none!important;
   }
+}
+
+/* Custom scrollbar - portfolio gradient */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #8b5cf6 #0d1015;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d1015;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8b5cf6 0%, #22d3ee 100%);
+    border-radius: 999px;
+    border: 2px solid #0d1015;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #22d3ee 0%, #8b5cf6 100%);
 }
 </style>
 </head>
@@ -3061,7 +3068,6 @@ html.perf-lite .mobile-nav{
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
 <div class="scroll-progress" id="scrollProgress"></div>
-<div class="mouse-glow" id="mouseGlow"></div>
 
 <header>
   <div class="wrap nav">
@@ -4270,8 +4276,10 @@ window.addEventListener("scroll",updateProgress,{passive:true});
    CUSTOM CURSOR — desktop only, transform based
 ===================================================== */
 const finePointer = window.matchMedia("(hover:hover) and (pointer:fine)");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const perfLite = document.documentElement.classList.contains("perf-lite");
 
-if(finePointer.matches){
+if(finePointer.matches && !perfLite){
   const dot = document.querySelector(".cursor-dot");
   const ring = document.querySelector(".cursor-ring");
   let mouseX = innerWidth / 2;
@@ -4322,7 +4330,7 @@ if(finePointer.matches){
 
 const heroOrb = document.getElementById("heroOrb");
 
-if(finePointer.matches && !document.documentElement.classList.contains("perf-lite")){
+if(finePointer.matches && !perfLite){
   let heroFrame = 0, hx = 0, hy = 0;
   window.addEventListener("pointermove",e=>{
     if(innerWidth < 900) return;
@@ -4461,7 +4469,7 @@ document.querySelectorAll(".magnetic")
 
   el.addEventListener("mousemove",e=>{
 
-    if(window.innerWidth < 900 || !finePointer.matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if(window.innerWidth < 900 || perfLite || !finePointer.matches || reducedMotion.matches) return;
 
     const rect = el.getBoundingClientRect();
 
@@ -4497,6 +4505,7 @@ const giantLines =
   document.querySelectorAll(".giant-line");
 
 let giantFrame = 0;
+if(!perfLite && !reducedMotion.matches){
 window.addEventListener("scroll",()=>{
   if(giantFrame) return;
   giantFrame = requestAnimationFrame(()=>{
@@ -4533,11 +4542,14 @@ window.addEventListener("scroll",()=>{
     });
   });
 });
+}
 
 
 /* =====================================================
    3D CARD TILT
 ===================================================== */
+
+if(!perfLite && !reducedMotion.matches && finePointer.matches){
 
 document.querySelectorAll(
   ".project,.service,.glow-card,.value-card,.about-card"
@@ -4546,7 +4558,7 @@ document.querySelectorAll(
 
   card.addEventListener("mousemove",e=>{
 
-    if(window.innerWidth < 900 || !finePointer.matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if(window.innerWidth < 900 || perfLite || !finePointer.matches || reducedMotion.matches) return;
 
     const rect =
       card.getBoundingClientRect();
@@ -4578,6 +4590,7 @@ document.querySelectorAll(
   });
 
 });
+}
 
 
 /* =====================================================
@@ -4713,7 +4726,7 @@ document.querySelectorAll('a[href^="#"]')
       e.preventDefault();
 
       target.scrollIntoView({
-        behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        behavior:reducedMotion.matches ? "auto" : "smooth",
         block:"start"
       });
 
