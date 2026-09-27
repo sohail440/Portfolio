@@ -9,6 +9,7 @@
 <link rel="canonical" href="https://sohails-portfolio.vercel.app/">
 <link rel="icon" href="icon.png" type="image/png" sizes="48x48">
 <link rel="apple-touch-icon" href="icon.png">
+<link rel="preload" as="image" href="logo-sp.png" fetchpriority="high">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sohails-portfolio.vercel.app/">
 <meta property="og:site_name" content="Sohail Ahmed — Senior Web Developer">
@@ -66,6 +67,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -3081,7 +3083,7 @@ html {
 <div id="site-preloader" aria-label="Loading portfolio">
   <div class="preloader-inner">
     <div class="preloader-logo-wrap">
-      <img class="preloader-logo" src="logo-sp.png" alt="Sohail Ahmed">
+      <img class="preloader-logo" src="logo-sp.png" alt="Sohail Ahmed" fetchpriority="high" decoding="async">
     </div>
     <div class="preloader-title">Sohail Ahmed</div>
     <div class="preloader-subtitle">Senior Web Developer</div>
@@ -4207,7 +4209,7 @@ html {
   const percent = document.getElementById("preloader-percent");
   let progress = 0;
   const started = performance.now();
-  const minDisplayTime = 700;
+  const minDisplayTime = 500;
 
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
