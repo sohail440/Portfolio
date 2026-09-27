@@ -306,6 +306,7 @@ section{
 }
 
 .cursor-ring{
+  will-change:transform;
   position:fixed;
   width:38px;
   height:38px;
@@ -689,6 +690,7 @@ header{
 }
 
 .orb{
+  will-change:transform;
   width:min(420px,75vw);
   aspect-ratio:1;
   border-radius:50%;
@@ -775,6 +777,7 @@ header{
 }
 
 .marquee{
+  will-change:transform;
   display:flex;
   width:max-content;
   animation:marquee 24s linear infinite;
@@ -4220,7 +4223,7 @@ html {
 
   function tick(){
     const elapsed = performance.now() - started;
-    // Keep the preloader visible for ~2 seconds.
+    // Keep the preloader visible for ~0.7 seconds.
     progress = Math.min(96, Math.round((elapsed / minDisplayTime) * 96));
     bar.style.width = progress + "%";
     percent.textContent = progress + "%";
@@ -4508,22 +4511,27 @@ document.querySelectorAll(".skill-fill")
 
 document.querySelectorAll(".magnetic")
 .forEach(el=>{
+  let magneticRect = null;
+
+  el.addEventListener("mouseenter",()=>{
+    magneticRect = el.getBoundingClientRect();
+  });
 
   el.addEventListener("mousemove",e=>{
 
     if(window.innerWidth < 900 || perfLite || !finePointer.matches || reducedMotion.matches) return;
 
-    const rect = el.getBoundingClientRect();
+    if(!magneticRect) magneticRect = el.getBoundingClientRect();
 
     const x =
       e.clientX -
-      rect.left -
-      rect.width / 2;
+      magneticRect.left -
+      magneticRect.width / 2;
 
     const y =
       e.clientY -
-      rect.top -
-      rect.height / 2;
+      magneticRect.top -
+      magneticRect.height / 2;
 
     el.style.transform =
       `translate(${x * .12}px,${y * .12}px)`;
@@ -4531,9 +4539,8 @@ document.querySelectorAll(".magnetic")
   });
 
   el.addEventListener("mouseleave",()=>{
-
     el.style.transform = "";
-
+    magneticRect = null;
   });
 
 });
@@ -4598,24 +4605,29 @@ document.querySelectorAll(
 )
 .forEach(card=>{
 
+  let cardRect = null;
+
+  card.addEventListener("mouseenter",()=>{
+    cardRect = card.getBoundingClientRect();
+  });
+
   card.addEventListener("mousemove",e=>{
 
     if(window.innerWidth < 900 || perfLite || !finePointer.matches || reducedMotion.matches) return;
 
-    const rect =
-      card.getBoundingClientRect();
+    if(!cardRect) cardRect = card.getBoundingClientRect();
 
     const x =
-      e.clientX - rect.left;
+      e.clientX - cardRect.left;
 
     const y =
-      e.clientY - rect.top;
+      e.clientY - cardRect.top;
 
     const rotateY =
-      ((x / rect.width) - .5) * 8;
+      ((x / cardRect.width) - .5) * 8;
 
     const rotateX =
-      ((y / rect.height) - .5) * -8;
+      ((y / cardRect.height) - .5) * -8;
 
     card.style.transform =
       `perspective(900px)
@@ -4626,9 +4638,8 @@ document.querySelectorAll(
   });
 
   card.addEventListener("mouseleave",()=>{
-
     card.style.transform = "";
-
+    cardRect = null;
   });
 
 });
