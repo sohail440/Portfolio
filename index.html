@@ -5210,7 +5210,7 @@ document.querySelectorAll('a[href^="#"]')
     <button id="chatbotClose" type="button" aria-label="Close chatbot">×</button>
   </div>
   <div class="chatbot-body" id="chatbotBody">
-    <div class="chatbot-message bot">Hi! 👋 I can help you explore Sohail's skills, services, projects and contact options.</div>
+    <div class="chatbot-message bot">Hi! 👋 Ask me anything about Sohail's skills, services, projects or contact details.</div>
     <div class="chatbot-quick">
       <button type="button" data-chat="skills">Skills</button>
       <button type="button" data-chat="services">Services</button>
@@ -5218,6 +5218,10 @@ document.querySelectorAll('a[href^="#"]')
       <button type="button" data-chat="contact">Contact</button>
     </div>
   </div>
+  <form class="chatbot-input" id="chatbotForm">
+    <input id="chatbotInput" type="text" autocomplete="off" placeholder="Type your message..." aria-label="Type your message">
+    <button type="submit" aria-label="Send message">➤</button>
+  </form>
 </div>
 
 <script id="portfolio-feature-script">
@@ -5456,37 +5460,32 @@ document.querySelectorAll('a[href^="#"]')
   const panel=document.getElementById("chatbotPanel");
   const close=document.getElementById("chatbotClose");
   const body=document.getElementById("chatbotBody");
-  if(!toggle||!panel)return;
+  const form=document.getElementById("chatbotForm");
+  const input=document.getElementById("chatbotInput");
+  if(!toggle||!panel||!body)return;
   const answers={
     skills:"Sohail focuses on WordPress, Elementor, WooCommerce, HTML, CSS, responsive web design, website redesign, landing pages and UI styling.",
     services:"Website development, WordPress & Elementor, WooCommerce, responsive design, website customization, landing pages and ecommerce layouts.",
     projects:"You can explore Sohail's work in the Projects section, including Gohar Medical Complex, RAMSUM, Amro Healthcare, Vehicle Inspect Check, Cresnexa Systems and more.",
     contact:"You can contact Sohail at sohailwork343@gmail.com or WhatsApp +92 318 7398788."
   };
-  function openChat(){
-    panel.classList.add("is-open");
-    panel.setAttribute("aria-hidden","false");
+  function openChat(){panel.classList.add("is-open");panel.setAttribute("aria-hidden","false");setTimeout(()=>input&&input.focus(),80)}
+  function closeChat(){panel.classList.remove("is-open");panel.setAttribute("aria-hidden","true")}
+  function addMessage(text,type){const msg=document.createElement("div");msg.className="chatbot-message "+type;msg.textContent=text;body.appendChild(msg);body.scrollTop=body.scrollHeight}
+  function replyTo(text){
+    const q=text.toLowerCase();
+    let reply="I can help with Sohail's skills, services, projects and contact details. Try asking about his skills, services, projects or contact.";
+    if(/skill|wordpress|elementor|woocommerce|html|css|developer/.test(q)) reply=answers.skills;
+    else if(/service|offer|work with|website|web site|development/.test(q)) reply=answers.services;
+    else if(/project|portfolio|work|built|client/.test(q)) reply=answers.projects;
+    else if(/contact|email|whatsapp|number|phone|hire|reach/.test(q)) reply=answers.contact;
+    setTimeout(()=>addMessage(reply,"bot"),220);
   }
-  function closeChat(){
-    panel.classList.remove("is-open");
-    panel.setAttribute("aria-hidden","true");
-  }
+  function send(text){const value=text.trim();if(!value)return;addMessage(value,"user");input.value="";replyTo(value)}
   toggle.addEventListener("click",()=>panel.classList.contains("is-open")?closeChat():openChat());
-  close.addEventListener("click",closeChat);
-  body.addEventListener("click",e=>{
-    const btn=e.target.closest("[data-chat]");
-    if(!btn)return;
-    const key=btn.dataset.chat;
-    const label=btn.textContent;
-    const user=document.createElement("div");
-    user.className="chatbot-message user";
-    user.textContent=label;
-    const reply=document.createElement("div");
-    reply.className="chatbot-message bot";
-    reply.textContent=answers[key]||"Please use the contact section to get in touch.";
-    body.append(user,reply);
-    body.scrollTop=body.scrollHeight;
-  });
+  close&&close.addEventListener("click",closeChat);
+  body.addEventListener("click",e=>{const btn=e.target.closest("[data-chat]");if(!btn)return;send(btn.textContent)});
+  form&&form.addEventListener("submit",e=>{e.preventDefault();send(input.value)});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeChat()});
 })();
 </script></body>
