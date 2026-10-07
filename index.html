@@ -3422,7 +3422,12 @@ html.light-mode .chatbot-input input::placeholder{color:#7b8797}
 @media(prefers-reduced-motion:reduce){
   .chatbot-float,.chatbot-panel{transition:none}
 }
-</style></head>
+</style>
+<style id="cta-light-text-fix">
+html.light-mode .btn-primary{color:#fff !important}
+html.light-mode .btn-primary *{color:#fff !important}
+</style>
+</head>
 
 <body>
 
@@ -5440,7 +5445,7 @@ document.querySelectorAll('a[href^="#"]')
   }
 
   function init(){
-    const theme=(()=>{try{return localStorage.getItem("portfolio-theme")||"light"}catch(e){return "light"}})();
+    const theme=(()=>{try{return localStorage.getItem("portfolio-theme")||"dark"}catch(e){return "dark"}})();
     const lang=(()=>{try{return localStorage.getItem("portfolio-language")||"en"}catch(e){return "en"}})();
     const accent=(()=>{try{return localStorage.getItem("portfolio-accent")||"purple"}catch(e){return "purple"}})();
 
