@@ -5458,37 +5458,100 @@ document.querySelectorAll('a[href^="#"]')
 </script>
 <script id="chatbot-script">
 (function(){
-  const toggle=document.getElementById("chatbotToggle");
-  const panel=document.getElementById("chatbotPanel");
-  const close=document.getElementById("chatbotClose");
-  const body=document.getElementById("chatbotBody");
-  const form=document.getElementById("chatbotForm");
-  const input=document.getElementById("chatbotInput");
-  if(!toggle||!panel||!body)return;
-  const answers={
-    skills:"Sohail focuses on WordPress, Elementor, WooCommerce, HTML, CSS, responsive web design, website redesign, landing pages and UI styling.",
-    services:"Website development, WordPress & Elementor, WooCommerce, responsive design, website customization, landing pages and ecommerce layouts.",
-    projects:"You can explore Sohail's work in the Projects section, including Gohar Medical Complex, RAMSUM, Amro Healthcare, Vehicle Inspect Check, Cresnexa Systems and more.",
-    contact:"You can contact Sohail at sohailwork343@gmail.com or WhatsApp +92 318 7398788."
-  };
-  function openChat(){panel.classList.add("is-open");panel.setAttribute("aria-hidden","false");setTimeout(()=>input&&input.focus(),80)}
-  function closeChat(){panel.classList.remove("is-open");panel.setAttribute("aria-hidden","true")}
-  function addMessage(text,type){const msg=document.createElement("div");msg.className="chatbot-message "+type;msg.textContent=text;body.appendChild(msg);body.scrollTop=body.scrollHeight}
-  function replyTo(text){
-    const q=text.toLowerCase();
-    let reply="I can help with Sohail's skills, services, projects and contact details. Try asking about his skills, services, projects or contact.";
-    if(/skill|wordpress|elementor|woocommerce|html|css|developer/.test(q)) reply=answers.skills;
-    else if(/service|offer|work with|website|web site|development/.test(q)) reply=answers.services;
-    else if(/project|portfolio|work|built|client/.test(q)) reply=answers.projects;
-    else if(/contact|email|whatsapp|number|phone|hire|reach/.test(q)) reply=answers.contact;
-    setTimeout(()=>addMessage(reply,"bot"),220);
+  "use strict";
+
+  function initChatbot(){
+    const toggle=document.getElementById("chatbotToggle");
+    const panel=document.getElementById("chatbotPanel");
+    const close=document.getElementById("chatbotClose");
+    const body=document.getElementById("chatbotBody");
+    const form=document.getElementById("chatbotForm");
+    const input=document.getElementById("chatbotInput");
+
+    if(!toggle||!panel||!close||!body||!form||!input) return;
+
+    const answers={
+      skills:"Sohail focuses on WordPress, Elementor, WooCommerce, HTML, CSS, responsive web design, website redesign, landing pages and UI styling.",
+      services:"Website development, WordPress & Elementor, WooCommerce, responsive design, website customization, landing pages and ecommerce layouts.",
+      projects:"You can explore Sohail's work in the Projects section, including Gohar Medical Complex, RAMSUM, Amro Healthcare, Vehicle Inspect Check, Cresnexa Systems and more.",
+      contact:"You can contact Sohail at sohailwork343@gmail.com or WhatsApp +92 318 7398788."
+    };
+
+    function openChat(){
+      panel.classList.add("is-open");
+      panel.setAttribute("aria-hidden","false");
+      setTimeout(function(){ input.focus(); },80);
+    }
+
+    function closeChat(){
+      panel.classList.remove("is-open");
+      panel.setAttribute("aria-hidden","true");
+    }
+
+    function addMessage(text,type){
+      const msg=document.createElement("div");
+      msg.className="chatbot-message "+type;
+      msg.textContent=text;
+      body.appendChild(msg);
+      body.scrollTop=body.scrollHeight;
+    }
+
+    function getReply(text){
+      const q=text.toLowerCase();
+      if(/skill|wordpress|elementor|woocommerce|html|css|developer/.test(q)) return answers.skills;
+      if(/service|offer|work with|website|web site|development/.test(q)) return answers.services;
+      if(/project|portfolio|built|client/.test(q)) return answers.projects;
+      if(/contact|email|whatsapp|number|phone|hire|reach/.test(q)) return answers.contact;
+      return "I can help with Sohail's skills, services, projects and contact details. Try asking about his skills, services, projects or contact.";
+    }
+
+    function sendMessage(text){
+      const value=(text||"").trim();
+      if(!value) return;
+
+      addMessage(value,"user");
+      input.value="";
+      input.focus();
+
+      setTimeout(function(){
+        addMessage(getReply(value),"bot");
+      },220);
+    }
+
+    toggle.addEventListener("click",function(){
+      panel.classList.contains("is-open") ? closeChat() : openChat();
+    });
+
+    close.addEventListener("click",closeChat);
+
+    body.addEventListener("click",function(e){
+      const btn=e.target.closest("[data-chat]");
+      if(btn) sendMessage(btn.textContent);
+    });
+
+    form.addEventListener("submit",function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      sendMessage(input.value);
+    });
+
+    input.addEventListener("keydown",function(e){
+      if(e.key==="Enter"){
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    document.addEventListener("keydown",function(e){
+      if(e.key==="Escape") closeChat();
+    });
   }
-  function send(text){const value=text.trim();if(!value)return;addMessage(value,"user");input.value="";replyTo(value)}
-  toggle.addEventListener("click",()=>panel.classList.contains("is-open")?closeChat():openChat());
-  close&&close.addEventListener("click",closeChat);
-  body.addEventListener("click",e=>{const btn=e.target.closest("[data-chat]");if(!btn)return;send(btn.textContent)});
-  form&&form.addEventListener("submit",e=>{e.preventDefault();send(input.value)});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeChat()});
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",initChatbot,{once:true});
+  }else{
+    initChatbot();
+  }
 })();
 </script></body>
 </html>
