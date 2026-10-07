@@ -363,6 +363,16 @@ header{
   justify-content:space-between;
   gap:25px;
   min-height:64px;
+  position:relative;
+}
+
+@media(min-width:851px){
+  .nav-links{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    white-space:nowrap;
+  }
 }
 
 .brand{
