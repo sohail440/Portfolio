@@ -1435,16 +1435,8 @@ header{
 
 .typing-line:after{
   content:"▋";
-  color:var(--accent);
-  animation:typingCaretTheme 1.2s steps(1,end) infinite;
-}
-
-@keyframes typingCaretTheme{
-  0%, 24.9%{color:var(--accent);opacity:1}
-  25%, 49.9%{color:var(--accent);opacity:0}
-  50%, 74.9%{color:var(--accent2);opacity:1}
-  75%, 99.9%{color:var(--accent2);opacity:0}
-  100%{color:var(--accent);opacity:1}
+  color:var(--accent2);
+  animation:blink .7s infinite;
 }
 
 
