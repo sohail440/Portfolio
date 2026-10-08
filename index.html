@@ -308,7 +308,6 @@ section{
 }
 
 .cursor-ring{
-  will-change:transform;
   position:fixed;
   width:38px;
   height:38px;
@@ -352,8 +351,8 @@ header{
   z-index:9999;
   padding:12px 0;
   background:rgba(7,8,11,.72);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   border-bottom:1px solid rgba(255,255,255,.06);
 }
 
@@ -739,7 +738,7 @@ header{
   inset:20%;
   border-radius:50%;
   background:rgba(7,8,11,.55);
-  backdrop-filter:blur(15px);
+  backdrop-filter:blur(8px);
   display:grid;
   place-items:center;
   text-align:center;
@@ -834,7 +833,7 @@ header{
   right:-70px;
   top:-70px;
   background:var(--accent);
-  filter:blur(80px);
+  filter:blur(45px);
   opacity:.15;
 }
 
@@ -1158,7 +1157,7 @@ header{
   bottom:-80px;
   border-radius:50%;
   background:var(--accent);
-  filter:blur(70px);
+  filter:blur(40px);
   opacity:0;
   transition:.4s;
 }
@@ -1737,7 +1736,7 @@ header{
   bottom:-90px;
   border-radius:50%;
   background:var(--accent2);
-  filter:blur(70px);
+  filter:blur(40px);
   opacity:.12;
 }
 
@@ -2935,8 +2934,8 @@ footer{
     conic-gradient(from -90deg, var(--accent) 0deg var(--progress), rgba(255,255,255,.10) var(--progress) 360deg);
   color:var(--accent);
   box-shadow:0 12px 35px rgba(0,0,0,.32), inset 0 0 20px rgba(255,255,255,.025);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
   cursor:pointer;
   z-index:9998;
   opacity:0;
@@ -3046,6 +3045,10 @@ html.perf-lite .mobile-nav{
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
 }
+
+/* Compositing-safe animation defaults */
+/* Keep the expensive layer budget small; transform/opacity animations remain intact. */
+.marquee,.orb{will-change:auto;}
 
 /* Extra low-device safeguards: keep layout/design intact, disable only costly pointer effects. */
 html.perf-lite .cursor-dot,
@@ -3371,8 +3374,8 @@ html.light-mode .chatbot-input input::placeholder{color:#7b8797}
   background:rgba(10,10,12,.92);
   color:var(--accent);
   box-shadow:0 12px 35px rgba(0,0,0,.28);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
   cursor:pointer;
   z-index:9997;
   transition:transform .2s ease,background .2s ease,color .2s ease;
@@ -4615,7 +4618,7 @@ html.light-mode .btn-primary *{color:#fff !important}
 
   // Lite mode only on genuinely constrained devices/connections.
   // All portfolio sections and animations remain intact.
-  if(cores <= 2 || memory <= 2 || saveData || slowConnection){
+  if(cores <= 4 || memory <= 4 || saveData || slowConnection){
     document.documentElement.classList.add("perf-lite");
   }
 })();
