@@ -1447,6 +1447,12 @@ header{
   100%{color:var(--accent);opacity:1}
 }
 
+.terminal-caret{
+  display:inline-block;
+  color:var(--accent)!important;
+  animation:typingCaretTheme 1.2s steps(1,end) infinite;
+}
+
 /* 11 PROJECTS */
 .projects-grid{
   display:grid;
@@ -5120,7 +5126,7 @@ const terminalLines = [
 
   '<br>',
 
-  '<span class="code-muted">$ status: ONLINE ▋</span>'
+  '<span class="code-muted">$ status: ONLINE <span class="terminal-caret">▋</span></span>'
 
 ];
 
