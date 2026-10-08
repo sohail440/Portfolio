@@ -4508,6 +4508,8 @@ html.light-mode .btn-primary *{color:#fff !important}
         class="contact-form reveal"
         action="https://formsubmit.co/ed28861dff9479822d191573212a11ed"
         method="POST"
+        toolname="contact_sohail"
+        tooldescription="Send a project inquiry to Sohail Ahmed, Senior Web Developer."
       >
 
         <h3>Start a project</h3>
@@ -4540,6 +4542,7 @@ html.light-mode .btn-primary *{color:#fff !important}
               name="name"
               placeholder="Your name"
               autocomplete="name"
+              toolparamdescription="The visitor's name."
               required
             >
           </div>
@@ -4552,6 +4555,7 @@ html.light-mode .btn-primary *{color:#fff !important}
               name="email"
               placeholder="you@example.com"
               autocomplete="email"
+              toolparamdescription="The visitor's email address."
               required
             >
           </div>
@@ -4564,6 +4568,7 @@ html.light-mode .btn-primary *{color:#fff !important}
               name="project"
               placeholder="What do you want to build?"
               autocomplete="off"
+              toolparamdescription="A short description of the project the visitor wants to build."
               required
             >
           </div>
@@ -4575,6 +4580,7 @@ html.light-mode .btn-primary *{color:#fff !important}
               name="message"
               placeholder="Tell me about your project..."
               autocomplete="off"
+              toolparamdescription="The visitor's project requirements or message."
               required
             ></textarea>
           </div>
@@ -5283,8 +5289,11 @@ document.querySelectorAll('a[href^="#"]')
       <button type="button" data-chat="contact">Contact</button>
     </div>
   </div>
-  <form class="chatbot-input" id="chatbotForm">
-    <input id="chatbotInput" type="text" autocomplete="off" placeholder="Type your message..." aria-label="Type your message">
+  <form class="chatbot-input" id="chatbotForm"
+      toolname="ask_sohail_assistant"
+      tooldescription="Ask Sohail's portfolio assistant about skills, services, projects or contact details.">
+    <input id="chatbotInput" type="text" name="message" autocomplete="off" placeholder="Type your message..." aria-label="Type your message"
+      toolparamdescription="The visitor's question for Sohail's portfolio assistant.">
     <button type="submit" aria-label="Send message">➤</button>
   </form>
 </div>
