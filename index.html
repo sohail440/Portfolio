@@ -613,6 +613,7 @@ header{
   line-height:.9;
   letter-spacing:-6px;
   animation:heroTitle 1s .1s both;
+  will-change:transform;
 }
 
 .hero h1 span{
@@ -1917,7 +1918,7 @@ footer{
 }
 
 @keyframes heroTitle{
-  from{opacity:0;transform:translateY(50px) skewY(4deg)}
+  from{opacity:1;transform:translateY(50px) skewY(4deg)}
   to{opacity:1;transform:none}
 }
 
@@ -3457,7 +3458,7 @@ html.light-mode .btn-primary *{color:#fff !important}
 <div id="site-preloader" aria-label="Loading portfolio">
   <div class="preloader-inner">
     <div class="preloader-logo-wrap">
-      <img class="preloader-logo" src="assets/logo-sp.png" alt="Sohail Ahmed" fetchpriority="high" decoding="async">
+      <img class="preloader-logo" src="assets/logo-sp.png" alt="Sohail Ahmed" decoding="async" fetchpriority="low">
     </div>
     <div class="preloader-title">Sohail Ahmed</div>
     <div class="preloader-subtitle">Senior Web Developer</div>
