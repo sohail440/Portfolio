@@ -1,9 +1,11 @@
 # Sohail Ahmed — Senior Web Developer
 
-Portfolio of Sohail Ahmed, a Senior Web Developer in Pakistan specializing in WordPress, Elementor, WooCommerce, responsive web design, custom front-end development and eCommerce experiences.
+> Portfolio of Sohail Ahmed, a Senior Web Developer in Pakistan specializing in WordPress, Elementor, WooCommerce, responsive web design, custom front-end development and eCommerce experiences.
 
-- [Portfolio](https://sohails-portfolio.vercel.app/)
-- [Projects](https://sohails-portfolio.vercel.app/#projects)
-- [Services](https://sohails-portfolio.vercel.app/#services)
-- [Contact](https://sohails-portfolio.vercel.app/#contact)
-- [Download CV](https://sohails-portfolio.vercel.app/assets/Sohail-Ahmed-CV.pdf)
+## Primary pages
+
+- [Portfolio](https://sohails-portfolio.vercel.app/): Main portfolio and professional overview.
+- [Projects](https://sohails-portfolio.vercel.app/#projects): Selected web development projects and client builds.
+- [Services](https://sohails-portfolio.vercel.app/#services): Website development, WordPress, Elementor, WooCommerce and custom front-end services.
+- [Contact](https://sohails-portfolio.vercel.app/#contact): Contact Sohail for a web development project.
+- [Download CV](https://sohails-portfolio.vercel.app/assets/Sohail-Ahmed-CV.pdf): Sohail Ahmed's CV.
