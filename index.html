@@ -4533,40 +4533,48 @@ html.light-mode .btn-primary *{color:#fff !important}
         <div class="form-grid">
 
           <div class="field">
-            <label>Name</label>
+            <label for="contact-name">Name</label>
             <input
+              id="contact-name"
               type="text"
               name="name"
               placeholder="Your name"
+              autocomplete="name"
               required
             >
           </div>
 
           <div class="field">
-            <label>Email</label>
+            <label for="contact-email">Email</label>
             <input
+              id="contact-email"
               type="email"
               name="email"
               placeholder="you@example.com"
+              autocomplete="email"
               required
             >
           </div>
 
           <div class="field full">
-            <label>Project</label>
+            <label for="contact-project">Project</label>
             <input
+              id="contact-project"
               type="text"
               name="project"
               placeholder="What do you want to build?"
+              autocomplete="off"
               required
             >
           </div>
 
           <div class="field full">
-            <label>Message</label>
+            <label for="contact-message">Message</label>
             <textarea
+              id="contact-message"
               name="message"
               placeholder="Tell me about your project..."
+              autocomplete="off"
               required
             ></textarea>
           </div>
@@ -4633,7 +4641,7 @@ html.light-mode .btn-primary *{color:#fff !important}
   const percent = document.getElementById("preloader-percent");
   let progress = 0;
   const started = performance.now();
-  const minDisplayTime = 500;
+  const minDisplayTime = 300;
 
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
@@ -4649,7 +4657,7 @@ html.light-mode .btn-primary *{color:#fff !important}
 
   function tick(){
     const elapsed = performance.now() - started;
-    // Keep the preloader visible for ~0.7 seconds.
+    // Keep the preloader visible briefly without delaying the main content.
     progress = Math.min(96, Math.round((elapsed / minDisplayTime) * 96));
     bar.style.width = progress + "%";
     percent.textContent = progress + "%";
