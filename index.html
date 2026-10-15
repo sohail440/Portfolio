@@ -1942,11 +1942,15 @@ html.light-mode .service-select-option:hover,html.light-mode .service-select-opt
   box-shadow:0 0 25px rgba(139,92,246,.12);
 }
 
+.contact-form-status{display:none;margin:0 0 14px;padding:12px 14px;border:1px solid rgba(34,211,238,.35);border-radius:12px;background:rgba(34,211,238,.07);color:#22d3ee;font-size:14px;line-height:1.5}
+.contact-form-status.is-visible{display:block}
+.contact-form-status.is-error{border-color:rgba(251,113,133,.45);background:rgba(251,113,133,.08);color:#fb7185}
 .form-submit{
   border:0;
   cursor:pointer;
   color:white;
 }
+.form-submit:disabled{opacity:.65;cursor:wait}
 
 /* FOOTER */
 footer{
@@ -4578,31 +4582,13 @@ html.light-mode .btn-primary *{color:#fff !important}
 
       <form
         class="contact-form reveal"
-        action="https://formsubmit.co/ed28861dff9479822d191573212a11ed"
+        action="/api/send-email"
         method="POST"
         toolname="contact_sohail"
         tooldescription="Send a project inquiry to Sohail Ahmed, Senior Web Developer."
       >
 
         <h3>Start a project</h3>
-
-        <input
-          type="hidden"
-          name="_subject"
-          value="New Portfolio Project Inquiry — Sohail Ahmed"
-        >
-
-        <input
-          type="hidden"
-          name="_captcha"
-          value="false"
-        >
-
-        <input
-          type="hidden"
-          name="_template"
-          value="box"
-        >
 
         <div class="form-grid">
 
@@ -4677,6 +4663,7 @@ html.light-mode .btn-primary *{color:#fff !important}
 
         </div>
 
+        <p class="contact-form-status" id="contact-form-status" role="status" aria-live="polite"></p>
         <button class="btn btn-primary form-submit magnetic" type="submit">
           Send Message →
         </button>
@@ -5769,6 +5756,53 @@ document.querySelectorAll('a[href^="#"]')
     render();
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initServiceDropdown,{once:true});else initServiceDropdown();
+})();
+</script>
+<script id="custom-contact-email">
+(function(){
+  function initContactEmail(){
+    const form=document.querySelector(".contact-form");
+    const status=document.getElementById("contact-form-status");
+    const submit=form?.querySelector('button[type="submit"]');
+    if(!form||!status||!submit||form.dataset.emailReady) return;
+    form.dataset.emailReady="true";
+    form.addEventListener("submit",async function(e){
+      e.preventDefault();
+      const service=document.getElementById("contact-project");
+      if(!service?.value){
+        document.getElementById("service-select-wrap")?.setAttribute("aria-invalid","true");
+        document.getElementById("service-select-trigger")?.focus();
+        status.textContent="Please select a service before sending.";
+        status.className="contact-form-status is-visible is-error";
+        return;
+      }
+      status.textContent="Sending your message securely…";
+      status.className="contact-form-status is-visible";
+      submit.disabled=true;
+      const original=submit.textContent;
+      submit.textContent="Sending…";
+      try{
+        const payload=Object.fromEntries(new FormData(form).entries());
+        const response=await fetch("/api/send-email",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok) throw new Error(result.error||"Message could not be sent. Please try again.");
+        status.textContent="Message sent successfully! Thanks for reaching out — I’ll get back to you soon.";
+        status.className="contact-form-status is-visible";
+        form.reset();
+        service.dispatchEvent(new Event("change",{bubbles:true}));
+        document.getElementById("service-select-value").textContent="Choose the service you need";
+        document.getElementById("service-select-value").style.color="#22d3ee";
+        document.querySelectorAll(".service-select-option").forEach(o=>o.setAttribute("aria-selected","false"));
+      }catch(err){
+        status.textContent=err.message||"Something went wrong. Please email sohailwork343@gmail.com directly.";
+        status.className="contact-form-status is-visible is-error";
+      }finally{
+        submit.disabled=false;
+        submit.textContent=original;
+      }
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initContactEmail,{once:true});else initContactEmail();
 })();
 </script>
 </body>
