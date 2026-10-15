@@ -3299,8 +3299,16 @@ html[lang="ur"] .whatsapp-float{
 html.perf-lite .orb,
 html.perf-lite .marquee,
 html.perf-lite .hero h1 span,
+html.perf-lite .universe h2 span,
 html.perf-lite .btn:before{
   animation:none!important;
+}
+
+/* Keep animated-gradient text as a static gradient on low-performance devices only. */
+html.perf-lite .hero h1 span,
+html.perf-lite .universe h2 span{
+  background-size:100% auto!important;
+  background-position:center!important;
 }
 html.perf-lite .orb{
   filter:none;
