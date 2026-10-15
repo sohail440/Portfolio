@@ -1911,6 +1911,25 @@ header{
   color:#22d3ee;
 }
 
+/* Rounded custom service dropdown */
+.service-select-native{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.service-select-wrap{position:relative;width:100%}
+.service-select-trigger{width:100%;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;padding:16px 18px;border:1px solid rgba(139,92,246,.48);border-radius:16px;background:#0d1015;color:#22d3ee;font:inherit;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 0 0 3px rgba(139,92,246,.045);transition:border-color .2s,box-shadow .2s}
+.service-select-trigger:hover,.service-select-wrap.is-open .service-select-trigger{border-color:rgba(34,211,238,.8)}
+.service-select-trigger:focus-visible{outline:0;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(34,211,238,.12),0 0 18px rgba(139,92,246,.12)}
+.service-select-trigger .service-select-arrow{width:16px;height:16px;flex:0 0 16px;transition:transform .2s}
+.service-select-wrap.is-open .service-select-arrow{transform:rotate(180deg)}
+.service-select-menu{position:absolute;z-index:1000;top:calc(100% + 8px);left:0;right:0;padding:6px;border:1px solid rgba(139,92,246,.55);border-radius:16px;background:#0d1015;box-shadow:0 18px 45px rgba(0,0,0,.5),0 0 0 3px rgba(139,92,246,.07);overflow:hidden;display:none;max-height:260px;overflow-y:auto}
+.service-select-wrap.is-open .service-select-menu{display:block;animation:serviceMenuIn .16s ease-out}
+@keyframes serviceMenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.service-select-option{display:block;width:100%;border:0;border-radius:10px;background:transparent;color:#f5f7fb;text-align:left;padding:11px 12px;font:inherit;font-size:14px;cursor:pointer;transition:background .15s,color .15s}
+.service-select-option:hover,.service-select-option:focus-visible{outline:0;background:#17313a;color:#22d3ee}
+.service-select-option[aria-selected="true"]{background:rgba(34,211,238,.1);color:#22d3ee}
+.service-select-wrap[aria-invalid="true"] .service-select-trigger{border-color:#fb7185;box-shadow:0 0 0 3px rgba(251,113,133,.12)}
+html.light-mode .service-select-trigger,html.light-mode .service-select-menu{background:#fff;color:#0d1015;border-color:rgba(139,92,246,.45)}
+html.light-mode .service-select-option{color:#202534}
+html.light-mode .service-select-option:hover,html.light-mode .service-select-option:focus-visible,html.light-mode .service-select-option[aria-selected="true"]{background:#e7f8fb;color:#087e91}
+
 .field textarea{
   min-height:140px;
   resize:vertical;
@@ -4615,24 +4634,33 @@ html.light-mode .btn-primary *{color:#fff !important}
 
           <div class="field full">
             <label for="contact-project">Select a Service</label>
-            <select
-              id="contact-project"
-              name="project"
-              required
-              toolparamdescription="The service the visitor is interested in."
-            >
-              <option value="" disabled selected>Choose the service you need</option>
-              <option value="Website Development">Website Development</option>
-              <option value="WordPress & Elementor">WordPress &amp; Elementor</option>
-              <option value="WooCommerce / E-commerce Store">WooCommerce / E-commerce Store</option>
-              <option value="Landing Page Design">Landing Page Design</option>
-              <option value="Responsive Web Design">Responsive Web Design</option>
-              <option value="Website Customization">Website Customization</option>
-              <option value="Bug Fixes & Troubleshooting">Bug Fixes &amp; Troubleshooting</option>
-              <option value="Website Speed Optimization">Website Speed Optimization</option>
-              <option value="Front-End Development (HTML/CSS)">Front-End Development (HTML/CSS)</option>
-              <option value="Other / Custom Requirements">Other / Custom Requirements</option>
-            </select>
+            <div class="service-select-wrap" id="service-select-wrap">
+              <select
+                id="contact-project"
+                name="project"
+                class="service-select-native"
+                tabindex="-1"
+                aria-hidden="true"
+                toolparamdescription="The service the visitor is interested in."
+              >
+                <option value="" disabled selected>Choose the service you need</option>
+                <option value="Website Development">Website Development</option>
+                <option value="WordPress &amp; Elementor">WordPress &amp; Elementor</option>
+                <option value="WooCommerce / E-commerce Store">WooCommerce / E-commerce Store</option>
+                <option value="Landing Page Design">Landing Page Design</option>
+                <option value="Responsive Web Design">Responsive Web Design</option>
+                <option value="Website Customization">Website Customization</option>
+                <option value="Bug Fixes &amp; Troubleshooting">Bug Fixes &amp; Troubleshooting</option>
+                <option value="Website Speed Optimization">Website Speed Optimization</option>
+                <option value="Front-End Development (HTML/CSS)">Front-End Development (HTML/CSS)</option>
+                <option value="Other / Custom Requirements">Other / Custom Requirements</option>
+              </select>
+              <button type="button" class="service-select-trigger" id="service-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span id="service-select-value">Choose the service you need</span>
+                <svg class="service-select-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="service-select-menu" id="service-select-menu" role="listbox" aria-label="Select a Service"></div>
+            </div>
           </div>
 
           <div class="field full">
@@ -5692,5 +5720,56 @@ document.querySelectorAll('a[href^="#"]')
     initChatbot();
   }
 })();
-</script></body>
+</script><script id="rounded-service-dropdown">
+(function(){
+  function initServiceDropdown(){
+    const select=document.getElementById("contact-project");
+    const wrap=document.getElementById("service-select-wrap");
+    const trigger=document.getElementById("service-select-trigger");
+    const value=document.getElementById("service-select-value");
+    const menu=document.getElementById("service-select-menu");
+    if(!select||!wrap||!trigger||!value||!menu||wrap.dataset.ready) return;
+    wrap.dataset.ready="true";
+    const placeholder=select.options[0].text;
+    function render(){
+      menu.replaceChildren();
+      Array.from(select.options).forEach((opt,index)=>{
+        if(index===0) return;
+        const item=document.createElement("button");
+        item.type="button"; item.className="service-select-option"; item.role="option";
+        item.textContent=opt.textContent; item.dataset.value=opt.value;
+        item.setAttribute("aria-selected",String(select.value===opt.value));
+        item.addEventListener("click",()=>choose(opt.value));
+        menu.appendChild(item);
+      });
+      value.textContent=select.selectedIndex>0?select.options[select.selectedIndex].textContent:placeholder;
+      value.style.color=select.value?"#f5f7fb":"#22d3ee";
+    }
+    function close(){wrap.classList.remove("is-open");trigger.setAttribute("aria-expanded","false")}
+    function open(){wrap.classList.add("is-open");trigger.setAttribute("aria-expanded","true")}
+    function choose(v){select.value=v;select.dispatchEvent(new Event("change",{bubbles:true}));wrap.removeAttribute("aria-invalid");render();close();trigger.focus()}
+    trigger.addEventListener("click",()=>wrap.classList.contains("is-open")?close():open());
+    trigger.addEventListener("keydown",e=>{
+      if(e.key==="Escape"){close();trigger.focus()}
+      if(e.key==="ArrowDown"){e.preventDefault();open();menu.querySelector(".service-select-option")?.focus()}
+    });
+    menu.addEventListener("keydown",e=>{
+      const items=Array.from(menu.querySelectorAll(".service-select-option"));const i=items.indexOf(document.activeElement);
+      if(e.key==="Escape"){e.preventDefault();close();trigger.focus()}
+      else if(e.key==="ArrowDown"){e.preventDefault();items[Math.min(i+1,items.length-1)]?.focus()}
+      else if(e.key==="ArrowUp"){e.preventDefault();if(i<=0)trigger.focus();else items[i-1]?.focus()}
+      else if(e.key==="Tab")close();
+    });
+    document.addEventListener("click",e=>{if(!wrap.contains(e.target))close()});
+    const form=select.closest("form");
+    form?.addEventListener("submit",e=>{
+      if(!select.value){e.preventDefault();e.stopImmediatePropagation();wrap.setAttribute("aria-invalid","true");open();trigger.focus()}
+    },true);
+    document.getElementById("languageToggle")?.addEventListener("click",()=>setTimeout(render,0));
+    render();
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initServiceDropdown,{once:true});else initServiceDropdown();
+})();
+</script>
+</body>
 </html>
