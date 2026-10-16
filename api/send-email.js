@@ -32,6 +32,7 @@ module.exports = async function handler(req, res) {
 
   const safeName = escapeHtml(name), safeEmail = escapeHtml(email);
   const safeProject = escapeHtml(project), safeMessage = escapeHtml(message);
+  const replySubject = encodeURIComponent(`Re: New Portfolio Inquiry: ${project}`);
   const html = `
   <div style="margin:0;background:#07080b;padding:32px 14px;font-family:Arial,Helvetica,sans-serif;color:#f5f7fb">
     <div style="max-width:640px;margin:0 auto;border:1px solid #26213b;border-radius:20px;overflow:hidden;background:#0d1015">
@@ -51,7 +52,7 @@ module.exports = async function handler(req, res) {
         </table>
         <div style="margin-bottom:9px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#a78bfa">Project message</div>
         <div style="padding:18px;border:1px solid #252a34;border-radius:13px;background:#090c11;color:#e4e8ef;font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere">${safeMessage}</div>
-        <div style="margin-top:24px"><a href="mailto:${safeEmail}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:#8b5cf6;color:#fff;text-decoration:none;font-size:13px;font-weight:700">Reply to ${safeName}</a></div>
+        <div style="margin-top:24px"><a href="mailto:${safeEmail}?subject=${replySubject}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:#8b5cf6;color:#fff;text-decoration:none;font-size:13px;font-weight:700">Reply to ${safeName}</a></div>
       </div>
       <div style="padding:17px 30px;border-top:1px solid #252a34;color:#7f8999;font-size:11px;line-height:1.6">Sent securely from sohails-portfolio.vercel.app · Sohail Ahmed, Senior Web Developer</div>
     </div>
