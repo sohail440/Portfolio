@@ -4895,7 +4895,15 @@ function updateProgress(){
 
 }
 
-window.addEventListener("scroll",updateProgress,{passive:true});
+let progressFrame = 0;
+window.addEventListener("scroll",()=>{
+  if(progressFrame) return;
+  progressFrame = requestAnimationFrame(()=>{
+    updateProgress();
+    progressFrame = 0;
+  });
+},{passive:true});
+updateProgress();
 
 
 /* =====================================================
