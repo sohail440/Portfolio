@@ -10,7 +10,6 @@
 <link rel="canonical" href="https://sohails-portfolio.vercel.app/">
 <link rel="icon" href="assets/icon.png" type="image/png" sizes="48x48">
 <link rel="apple-touch-icon" href="assets/icon.png">
-<link rel="preload" as="image" href="assets/logo-sp.png" fetchpriority="high">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sohails-portfolio.vercel.app/">
 <meta property="og:site_name" content="Sohail Ahmed — Senior Web Developer">
@@ -3132,6 +3131,32 @@ html.perf-lite .cursor-dot,
 html.perf-lite .cursor-ring{display:none!important;}
 html.perf-lite .hero-orb,
 html.perf-lite .heroOrb{transform:none!important;}
+
+/* Keep the hero lightweight on constrained devices without changing its layout. */
+html.perf-lite .orb{
+  animation:none!important;
+  filter:none!important;
+  box-shadow:none!important;
+  will-change:auto!important;
+}
+html.perf-lite .orb-core{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+
+/* Mobile Lighthouse runs benefit from avoiding large animated blur layers. */
+@media (max-width:900px){
+  .orb{
+    animation:none;
+    filter:none;
+    box-shadow:0 0 28px rgba(139,92,246,.14);
+    will-change:auto;
+  }
+  .orb-core{
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+}
 
 @media (max-width:900px), (prefers-reduced-motion:reduce){
   [style*="backdrop-filter"],
