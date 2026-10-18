@@ -344,7 +344,9 @@ body.cursor-hover .cursor-ring{
   position:fixed;
   top:0;
   left:0;
-  width:0;
+  width:100%;
+  transform:scaleX(0);
+  transform-origin:left center;
   height:3px;
   z-index:10000;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
@@ -360,8 +362,8 @@ header{
   z-index:9999;
   padding:12px 0;
   background:rgba(7,8,11,.72);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   border-bottom:1px solid rgba(255,255,255,.06);
 }
 
@@ -1089,7 +1091,7 @@ header{
   color:transparent;
   -webkit-text-stroke:1px rgba(255,255,255,.2);
   transform:translateX(var(--move,0px));
-  transition:transform .15s linear;
+  transition:none;
 }
 
 .giant-line.filled{
@@ -4841,7 +4843,7 @@ function updateProgress(){
   const percent =
     height > 0 ? (scrollTop / height) * 100 : 0;
 
-  progress.style.width = percent + "%";
+  progress.style.transform = "scaleX(" + (percent / 100) + ")";
 
 }
 
