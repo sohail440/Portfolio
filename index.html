@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta property="fb:app_id" content="YOUR_APP_ID">
   <meta name="google-site-verification" content="fXHz8IOg-mwt0Ium9Y7PGccLbisdNOOKUO4MoVTxp8w" />
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -3165,6 +3164,29 @@ html.perf-lite .orb-core{
     -webkit-backdrop-filter:none!important;
     backdrop-filter:none!important;
   }
+}
+
+/* Mobile performance pass: stop decorative paint-heavy motion, preserve layout and interactions. */
+@media (max-width:900px){
+  .orbit-1,.orbit-2,.orbit-3,.universe-orbit,.particle,
+  .preloader-logo-wrap,.preloader-logo-wrap:before,.preloader-logo-wrap:after{
+    animation:none!important;
+  }
+  .particle,.orbit-1,.orbit-2,.orbit-3,.universe-orbit{
+    filter:none!important;
+    box-shadow:none!important;
+    will-change:auto!important;
+  }
+  .about-card:before{
+    filter:none!important;
+  }
+}
+html.perf-lite .particle,
+html.perf-lite [class*="orbit"]{
+  animation:none!important;
+  filter:none!important;
+  box-shadow:none!important;
+  will-change:auto!important;
 }
 
 /* Custom scrollbar - portfolio gradient */
