@@ -1,0 +1,17 @@
+{
+  "name": "sohail-portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio website for Sohail Ahmed - Senior Web Developer",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "portfolio",
+    "web-developer"
+  ],
+  "author": "Sohail Ahmed",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/speed-insights": "^1.1.0"
+  }
+}
