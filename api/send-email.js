@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
   const safeProject = escapeHtml(project), safeMessage = escapeHtml(message);
   const replySubject = encodeURIComponent(`Re: New Portfolio Inquiry: ${project}`);
   const html = `
-  <div style="margin:0;background:#ffffff;padding:32px 14px;font-family:Arial,Helvetica,sans-serif;color:#f5f7fb">
+  <div style="margin:0;background:#f3f4f6;padding:32px 14px;font-family:Arial,Helvetica,sans-serif;color:#f5f7fb">
     <div style="max-width:640px;margin:0 auto;border:1px solid #26213b;border-radius:20px;overflow:hidden;background:#0d1015">
       <div style="padding:28px 30px;background:linear-gradient(120deg,#171027,#10242b);border-bottom:1px solid #29223d">
         <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#22d3ee;font-weight:700">Portfolio Contact</div>
