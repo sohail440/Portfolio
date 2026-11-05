@@ -5865,12 +5865,12 @@ document.querySelectorAll('a[href^="#"]')
       const emailInput=document.getElementById("contact-email");
       const messageInput=document.getElementById("contact-message");
       const nameValue=nameInput.value.trim();
-      const letterCount=(nameValue.match(/\\p{L}/gu)||[]).length;
-      nameInput.setCustomValidity(letterCount<4 ? "Name must contain at least 4 letters." : (!/^[\\p{L}\\p{M}\\s'-]+$/u.test(nameValue) ? "Use letters, spaces, hyphens and apostrophes only." : ""));
+      const letterCount=(nameValue.match(/\p{L}/gu)||[]).length;
+      nameInput.setCustomValidity(letterCount<4 ? "Name must contain at least 4 letters." : (!/^[\p{L}\p{M}\s'-]+$/u.test(nameValue) ? "Use letters, spaces, hyphens and apostrophes only." : ""));
       messageInput.setCustomValidity(messageInput.value.trim().length<20 ? "Message must contain at least 20 characters." : "");
       if(!form.reportValidity()) return;
       emailInput.setCustomValidity("");
-      if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(emailInput.value.trim())){
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailInput.value.trim())){
         emailInput.setCustomValidity("Please enter a valid email address.");
         emailInput.reportValidity();
         return;
