@@ -75,6 +75,8 @@
 }
 </script>
 
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
   <title>Sohail Ahmed | Senior Web Developer, WordPress & Elementor Expert</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1953,6 +1955,7 @@ html.light-mode .service-select-option:hover,html.light-mode .service-select-opt
 }
 
 .contact-hp-field{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
+.cf-turnstile{margin:0 0 18px;min-height:65px}
 .contact-form-status{display:none;margin:0 0 14px;padding:12px 14px;border:1px solid rgba(34,211,238,.35);border-radius:12px;background:rgba(34,211,238,.07);color:#22d3ee;font-size:14px;line-height:1.5}
 .contact-form-status.is-visible{display:block}
 .contact-form-status.is-error{border-color:rgba(251,113,133,.45);background:rgba(251,113,133,.08);color:#fb7185}
@@ -4740,6 +4743,8 @@ html.light-mode .btn-primary *{color:#fff !important}
           <input id="contact-website" type="text" name="website" tabindex="-1" autocomplete="off">
         </div>
 
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF08YvovnCJsHNlB" data-theme="dark"></div>
+
         <p class="contact-form-status" id="contact-form-status" role="status" aria-live="polite"></p>
         <button class="btn btn-primary form-submit magnetic" type="submit">
           Send Message →
@@ -5882,6 +5887,7 @@ document.querySelectorAll('a[href^="#"]')
       submit.textContent="Sending…";
       try{
         const payload=Object.fromEntries(new FormData(form).entries());
+        if(!payload["cf-turnstile-response"]) throw new Error("Please complete the security check before sending.");
         const response=await fetch("/api/send-email",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
         const result=await response.json().catch(()=>({}));
         if(!response.ok) throw new Error(result.error||"Message could not be sent. Please try again.");
@@ -5896,6 +5902,7 @@ document.querySelectorAll('a[href^="#"]')
         status.textContent=err.message||"Something went wrong. Please email sohailwork343@gmail.com directly.";
         status.className="contact-form-status is-visible is-error";
       }finally{
+        if(window.turnstile) window.turnstile.reset();
         submit.disabled=false;
         submit.textContent=original;
       }
