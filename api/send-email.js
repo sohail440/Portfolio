@@ -24,10 +24,22 @@ module.exports = async function handler(req, res) {
   if (typeof body === "string") { try { body = JSON.parse(body); } catch { return json(res, 400, { error: "Invalid request." }); } }
   if (!body || typeof body !== "object" || Array.isArray(body)) return json(res, 400, { error: "Invalid request." });
 
-  const name = clean(body.name, 100), email = clean(body.email, 254);
-  const project = clean(body.project, 100), message = clean(body.message, 5000);
+  // Honeypot: real visitors never interact with this field.
+  if (typeof body.website === "string" && body.website.trim()) return json(res, 400, { error: "Invalid submission." });
+
+  const name = clean(body.name, 50), email = clean(body.email, 254);
+  const project = clean(body.project, 100), message = clean(body.message, 2000);
+  const nameLetters = (name.match(/\\p{L}/gu) || []).length;
   if (!name || !email || !project || !message) return json(res, 400, { error: "Please complete every field." });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json(res, 400, { error: "Please enter a valid email address." });
+  if (nameLetters < 4 || !/^[\\p{L}\\p{M}\\s'-]+$/u.test(name)) {
+    return json(res, 400, { error: "Name must contain at least 4 letters and use only letters, spaces, hyphens or apostrophes." });
+  }
+  if (email.length > 254 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email)) {
+    return json(res, 400, { error: "Please enter a valid email address." });
+  }
+  if (message.trim().length < 20 || message.length > 2000) {
+    return json(res, 400, { error: "Message must be between 20 and 2,000 characters." });
+  }
   if (!ALLOWED_SERVICES.has(project)) return json(res, 400, { error: "Please select a valid service." });
 
   const safeName = escapeHtml(name), safeEmail = escapeHtml(email);
