@@ -29,6 +29,35 @@ module.exports = async function handler(req, res) {
   // Honeypot: real visitors never interact with this field.
   if (typeof body.website === "string" && body.website.trim()) return json(res, 400, { error: "Invalid submission." });
 
+  // Verify the Turnstile token on the server before accepting the inquiry.
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+  const turnstileToken = clean(body["cf-turnstile-response"]);
+  if (!turnstileSecret) {
+    console.error("Missing TURNSTILE_SECRET_KEY.");
+    return json(res, 503, { error: "Security verification is not configured yet. Please try again later." });
+  }
+  if (!turnstileToken || turnstileToken.length > 2048) {
+    return json(res, 400, { error: "Please complete the security check and try again." });
+  }
+  try {
+    const ipHeader = req.headers["cf-connecting-ip"] || req.headers["x-forwarded-for"];
+    const remoteip = Array.isArray(ipHeader) ? ipHeader[0] : (ipHeader || "").split(",")[0].trim();
+    const verificationResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret: turnstileSecret, response: turnstileToken, ...(remoteip ? { remoteip } : {}) }),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!verificationResponse.ok) throw new Error("Siteverify returned " + verificationResponse.status);
+    const verification = await verificationResponse.json();
+    if (!verification.success) {
+      console.warn("Turnstile verification rejected:", verification["error-codes"] || []);
+      return json(res, 400, { error: "Security check failed or expired. Please complete it again." });
+    }
+  } catch (error) {
+    console.error("Turnstile verification request failed:", error);
+    return json(res, 503, { error: "Security verification is temporarily unavailable. Please try again." });
+  }
   const name = clean(body.name), email = clean(body.email);
   const project = clean(body.project), message = clean(body.message);
   const nameLetters = (name.match(/\p{L}/gu) || []).length;
