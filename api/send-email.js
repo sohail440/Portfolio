@@ -1,3 +1,5 @@
+const { resolveMx } = require("node:dns").promises;
+
 const ALLOWED_SERVICES = new Set([
   "Website Development", "WordPress & Elementor", "WooCommerce / E-commerce Store",
   "Landing Page Design", "Responsive Web Design", "Website Customization",
@@ -37,8 +39,24 @@ module.exports = async function handler(req, res) {
   if (nameLetters < 4 || !/^[\p{L}\p{M}\s'-]+$/u.test(name)) {
     return json(res, 400, { error: "Name must contain at least 4 letters and use only letters, spaces, hyphens or apostrophes." });
   }
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+  const emailMatch = email.match(/^([A-Z0-9.!#$%&'*+/=?^_`{|}~-]+)@([A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+)$/i);
+  if (email.length > 254 || !emailMatch || emailMatch[1].startsWith(".") || emailMatch[1].endsWith(".") || emailMatch[1].includes("..")) {
     return json(res, 400, { error: "Please enter a valid email address." });
+  }
+
+  // Accept Gmail, Outlook, Yahoo and other genuine email domains with working MX records.
+  const emailDomain = emailMatch[2].toLowerCase();
+  try {
+    const mxRecords = await resolveMx(emailDomain);
+    if (!Array.isArray(mxRecords) || mxRecords.length === 0) {
+      return json(res, 400, { error: "Please use an email address from a valid email provider or domain." });
+    }
+  } catch (error) {
+    if (error && ["ENOTFOUND", "ENODATA", "ENONAME"].includes(error.code)) {
+      return json(res, 400, { error: "Please use an email address from a valid email provider or domain." });
+    }
+    console.error("Email domain DNS check failed:", error);
+    return json(res, 503, { error: "We could not verify your email domain right now. Please try again." });
   }
   if (message.trim().length < 20 || message.length > 2000) {
     return json(res, 400, { error: "Message must be between 20 and 2,000 characters." });
