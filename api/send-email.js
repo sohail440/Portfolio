@@ -4,7 +4,7 @@ const ALLOWED_SERVICES = new Set([
   "Bug Fixes & Troubleshooting", "Website Speed Optimization",
   "Front-End Development (HTML/CSS)", "Other / Custom Requirements",
 ]);
-function clean(value, max) { return typeof value === "string" ? value.trim().slice(0, max) : ""; }
+function clean(value) { return typeof value === "string" ? value.trim() : ""; }
 function escapeHtml(value) {
   return value.replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c]);
 }
@@ -27,10 +27,13 @@ module.exports = async function handler(req, res) {
   // Honeypot: real visitors never interact with this field.
   if (typeof body.website === "string" && body.website.trim()) return json(res, 400, { error: "Invalid submission." });
 
-  const name = clean(body.name, 50), email = clean(body.email, 254);
-  const project = clean(body.project, 100), message = clean(body.message, 2000);
+  const name = clean(body.name), email = clean(body.email);
+  const project = clean(body.project), message = clean(body.message);
   const nameLetters = (name.match(/\p{L}/gu) || []).length;
   if (!name || !email || !project || !message) return json(res, 400, { error: "Please complete every field." });
+  if (name.length > 50 || email.length > 254 || project.length > 100 || message.length > 2000) {
+    return json(res, 400, { error: "One or more fields exceed the allowed length." });
+  }
   if (nameLetters < 4 || !/^[\p{L}\p{M}\s'-]+$/u.test(name)) {
     return json(res, 400, { error: "Name must contain at least 4 letters and use only letters, spaces, hyphens or apostrophes." });
   }
