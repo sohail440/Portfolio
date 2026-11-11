@@ -5701,10 +5701,12 @@ document.querySelectorAll('a[href^="#"]')
       contact:"You can contact Sohail at sohailwork343@gmail.com or WhatsApp +92 318 7398788."
     };
 
-    function openChat(){
+    function openChat(shouldFocus){
       panel.classList.add("is-open");
       panel.setAttribute("aria-hidden","false");
-      setTimeout(function(){ input.focus(); },80);
+      if(shouldFocus !== false){
+        setTimeout(function(){ input.focus(); },80);
+      }
     }
 
     function closeChat(){
@@ -5769,6 +5771,12 @@ document.querySelectorAll('a[href^="#"]')
     document.addEventListener("keydown",function(e){
       if(e.key==="Escape") closeChat();
     });
+
+    // Open the assistant once on page load with a subtle entrance.
+    // Do not autofocus: this avoids unexpectedly opening the mobile keyboard.
+    window.setTimeout(function(){
+      if(!panel.classList.contains("is-open")) openChat(false);
+    },850);
   }
 
   if(document.readyState==="loading"){
